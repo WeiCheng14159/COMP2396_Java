@@ -1,0 +1,37 @@
+import java.util.*;
+
+public class BigTwo {
+	int numOfPlayer;
+	Deck deck;
+	ArrayList <CardGamePlayer> playerList;
+	ArrayList <Hand> handsOnTable;
+	int currentIdx;
+	
+	public BigTwo(){
+		
+		numOfPlayer=4;
+		
+		deck = new BigTwoDeck();
+		deck.initialize();
+
+		int i = 0; int j = 0;
+		for ( i = 0 ; i < 3 ; i ++){
+			CardGamePlayer player = new CardGamePlayer();
+			for( j = 0 ; j < 13 ; j++){
+				player.addCard(deck.getCard(i+j));
+			}
+			j+=13;
+			this.playerList.add(player);
+		}
+	
+		
+		
+		
+	}
+	public int whHasSmall3(){
+		
+	}
+	public start(){
+		
+	}
+}

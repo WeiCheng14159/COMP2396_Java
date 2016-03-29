@@ -1,0 +1,25 @@
+
+public class Hand extends CardList {
+	
+	private CardGamePlayer player;
+	
+	public Hand( CardGamePlayer player, CardList cards){
+		this.player = player;
+		for( int i = 0 ; i < cards.size();i++){
+			
+		}
+	}
+	
+	public CardGamePlayer getPlayer(){
+		return this.player;
+	}
+	
+	public Card getTopCard(){
+		
+	}
+	public boolean beats(Hand hand){
+		
+	}
+	abstract boolean isValid();
+	abstract String getType(); 
+}

@@ -1,12 +1,22 @@
 
-public class Hand extends CardList {
-	public Hand( CardGamePlayer player, CardList cards){
-		
-	}
+public abstract class Hand extends CardList {
+	
 	private CardGamePlayer player;
-	public CardGamePlayer getPlayer(){
+	friend CardList cardListNotVerify;
+	
+	public Hand(){
 		
 	}
+	
+	public Hand( CardGamePlayer player, CardList cards){
+		this.cardListNotVerify=cards;
+		this.player = player;
+	}
+	
+	public CardGamePlayer getPlayer(){
+		return this.player;
+	}
+	
 	public Card getTopCard(){
 		
 	}
