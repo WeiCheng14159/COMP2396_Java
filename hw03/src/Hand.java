@@ -36,14 +36,14 @@ public class Hand extends CardList {
 		
 		Hand [] me = new Hand[8];
 		
-		me[0] = new Flush(hand.player, hand.list);
-		me[1] = new FullHouse(hand.player, hand.list);
-		me[2] = new Pair(hand.player, hand.list);
-		me[3] = new Quad(hand.player, hand.list);
-		me[4] = new Single(hand.player, hand.list);
-		me[5] = new Straight(hand.player, hand.list);
-		me[6] = new StraightFlush(hand.player, hand.list);
-		me[7] = new Triple(hand.player, hand.list);
+		me[0] = new Flush(player, list);
+		me[1] = new FullHouse(player, list);
+		me[2] = new Pair(player, list);
+		me[3] = new Quad(player, list);
+		me[4] = new Single(player, list);
+		me[5] = new Straight(player, list);
+		me[6] = new StraightFlush(player, list);
+		me[7] = new Triple(player, list);
 		
 		for(int i = 0 ; i < 8 ; i++){
 			if(others[i].isValid()){
@@ -60,20 +60,44 @@ public class Hand extends CardList {
 		
 		if(orderA == orderB){
 			BigTwoCard myTopCard = new BigTwoCard(me[orderA].getTopCard().suit, me[orderA].getTopCard().rank);
-			BigTwoCard HisTopCard = new BigTwoCard(others[orderA].getTopCard().suit, others[orderA].getTopCard().rank);
-			if(myTopCard.compareTo(HisTopCard) > 0){
+			BigTwoCard HisTopCard = new BigTwoCard(others[orderB].getTopCard().suit, others[orderB].getTopCard().rank);
+			
+			if( myTopCard.compareTo(HisTopCard) > 0){
+				//System.out.println("haha I am biggerrrrr");
 				return true;
 			}else{
+				//System.out.println("gg I am smalleeeer");
 				return false;
 			}
-		}else{
+		}else{//type mismatch 
 			return false;
 		}	
 	}
 	
 	boolean isValid(){
-		System.out.println("err");
-		return false;
+		Hand [] me = new Hand[8];
+		int valid = -1;
+		me[0] = new Flush(player, list);
+		me[1] = new FullHouse(player, list);
+		me[2] = new Pair(player, list);
+		me[3] = new Quad(player, list);
+		me[4] = new Single(player, list);
+		me[5] = new Straight(player, list);
+		me[6] = new StraightFlush(player, list);
+		me[7] = new Triple(player, list);
+		
+		for(int i = 0 ; i < 8 ; i++){
+			if(me[i].isValid()){
+				valid = i;
+				break;
+			}
+		}
+		if(valid != -1){
+			System.out.println("card type code: "+valid);
+			return true;
+		}else{
+			return false;
+		}
 	}
 	
 	String getType(){
