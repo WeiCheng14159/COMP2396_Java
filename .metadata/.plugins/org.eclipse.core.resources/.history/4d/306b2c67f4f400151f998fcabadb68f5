@@ -1,0 +1,17 @@
+package lab06;
+
+import java.util.ArrayList;
+
+public class Undergraduate extends Student {
+	Undergraduate(String id, String name, String gender){
+		this.setGender(gender);
+		this.setId(id);
+		this.setName(name);
+		study=new ArrayList<String>();
+	}
+	public void printInfo(){
+		System.out.println("ID: "+id);
+		System.out.println("name: "+name);
+		System.out.println("gender"+gender);
+	}
+}

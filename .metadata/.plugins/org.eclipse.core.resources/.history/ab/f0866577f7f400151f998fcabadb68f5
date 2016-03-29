@@ -1,0 +1,80 @@
+package lab06;
+
+import java.util.ArrayList;
+public class Teacher extends Person {
+	ArrayList<String> teach;
+	ArrayList<Student> student;
+	
+	Teacher(String id, String name, String gender)
+	{
+		this.setId(id);
+		this.setName(name);;
+		this.setGender(gender);;
+	 	teach = new ArrayList<String>();
+	 	student = new ArrayList<Student>();
+	}
+	
+	void setCourses(ArrayList<String> c){
+		teach=c;
+	}
+	
+	public void printInfo(){
+		System.out.println("This is a teacher");
+		System.out.println("Name: "+this.getName());
+		System.out.println("Gender: "+this.getGender());
+		
+		String tmp = "Teach:";
+		for(String s:teach){
+			tmp = tmp + " "+s;
+		}
+		System.out.println(tmp);
+	}
+	
+	void dropStudent(Student toBeDrop){
+		
+		if( checkStudent(toBeDrop)){
+			student.remove(toBeDrop);
+			System.out.println("drop suc");
+		}else{
+			System.out.println("this is not my student");
+		}
+	}
+	/*void dropStudent(Student toBeDrop){
+		
+		if( checkStudent(toBeDrop)){
+			student.remove(toBeDrop);
+			System.out.println("drop suc");
+		}else{
+			System.out.println("this is not my student");
+		}
+	}*/
+	
+	/*void addStudent(Student toBeAdd){
+		if( checkStudent(toBeAdd)){
+			student.add(toBeAdd);
+			System.out.println("add suc");
+		}else{
+			System.out.println("this is not my student");
+		}
+	}*/
+	
+	void addStudent(Student toBeAdd){
+		if( checkStudent(toBeAdd)){
+			student.add(toBeAdd);
+			System.out.println("add suc");
+		}else{
+			System.out.println("this is not my student");
+		}
+	}
+	
+	private boolean checkStudent(Student a){
+		for(int i = 0 ; i < teach.size();i++){
+			for(int j = 0 ; j < a.study.size();j++){
+				if(a.study.get(j) == teach.get(i)){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+}

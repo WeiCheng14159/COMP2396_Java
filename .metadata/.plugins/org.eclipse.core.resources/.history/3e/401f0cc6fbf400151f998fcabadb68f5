@@ -1,0 +1,50 @@
+package lab06;
+
+import java.util.ArrayList;
+/**
+ * Define a teacher
+ * @author sqluo
+ *
+ */
+public class Teacher extends Person {
+	
+	private ArrayList<String> teach;
+	private ArrayList<Student> student;
+	
+	public Teacher(String id, String name, String gender)
+	{
+		this.setId(id);
+		this.setName(name);;
+		this.setGender(gender);;
+	 	teach = new ArrayList<String>();
+	 	student = new ArrayList<Student>();
+	}
+	
+	public void setCourses(ArrayList<String> c){
+		teach=new ArrayList<String>();
+		teach=c;
+	}
+	
+	public void dropStudent(Student toBeDrop){
+		if(student.contains(toBeDrop)){
+			student.remove(toBeDrop);
+		}else{
+			System.out.println("You haven't selected this student yet.");
+		}
+	}
+
+	public void addStudent(Student toBeAdd){
+		if( !student.contains(toBeAdd)){
+			student.add(toBeAdd);
+		}else{
+			System.out.println("You added this student before.");
+		}
+	}
+	
+	public void printInfo(){
+		System.out.println("Here is the detail information of students.");
+		for ( int i = 0 ; i < student.size();i++){
+			student.get(i).printInfo();
+		}
+	}
+}

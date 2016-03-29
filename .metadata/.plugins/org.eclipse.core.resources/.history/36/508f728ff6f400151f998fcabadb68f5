@@ -1,0 +1,52 @@
+package lab06;
+
+import java.util.*;
+
+public class Postgraduate extends Student {
+	
+	private ArrayList<String> research;
+	
+	Postgraduate(){};
+	
+	Postgraduate(String name, String gender, String id){
+		this.setId(id);
+		this.setName(name);
+		this.setGender(gender);
+		research = new ArrayList<String>();
+		study = new ArrayList<String>();
+	}
+	void addResearch(String addR){
+		if( ! this.research.contains(addR)){
+			this.research.remove(addR);
+			System.out.println("add suc");
+		}else{
+			System.out.println("err");
+		}
+	}
+	
+	void dropResearch(String dropR){
+		if(this.research.contains(dropR)){
+			this.research.remove(dropR);
+			System.out.println("drop suc");
+		}else{
+			System.out.println("err");
+		}
+	}
+	
+	public void printInfo(){
+		System.out.println("this is a postgraduate student");
+		System.out.println("name: "+this.getName());
+		System.out.println("gender: "+this.getGender());
+		System.out.print("study: ");
+		for( int i = 0 ; i < study.size() ; i++){
+			System.out.print(study.get(i)+" ");
+		}
+		System.out.println();
+		System.out.print("research: ");
+		for( int i = 0 ; i < research.size() ; i++){
+			System.out.print(research.get(i)+" ");
+		}
+		System.out.println();
+	}
+	
+}
