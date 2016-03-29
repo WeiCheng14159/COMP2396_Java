@@ -1,0 +1,16 @@
+
+public class Triple extends Hand {
+
+	@Override
+	boolean isValid() {
+		list.sort();
+		
+	}
+
+	@Override
+	String getType() {
+		// TODO Auto-generated method stub
+		return "Triple";
+	}
+
+}

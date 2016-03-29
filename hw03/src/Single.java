@@ -1,15 +1,23 @@
 
 public class Single extends Hand {
 
-	@Override
-	boolean isValid() {
-		// TODO Auto-generated method stub
-		return false;
+	Single(CardGamePlayer player, CardList cards){
+		super(player, cards); 
 	}
 
-	@Override
+	boolean isValid() {
+		if(list.size() != 1){
+			return false;
+		}else{
+			return true;
+		}
+	}
+	
+	public Card getTopCard(){
+		return list.getCard(0);
+	}
+
 	String getType() {
-		// TODO Auto-generated method stub
 		return "Single";
 	}
 

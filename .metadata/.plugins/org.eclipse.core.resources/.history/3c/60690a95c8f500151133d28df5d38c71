@@ -1,0 +1,19 @@
+
+public class Triple extends Hand {
+	
+	Triple(CardGamePlayer player, CardList cards){
+		super(player, cards); 
+	}	
+	
+	boolean isValid() {
+		list.sort();
+		
+	}
+
+	@Override
+	String getType() {
+		// TODO Auto-generated method stub
+		return "Triple";
+	}
+
+}

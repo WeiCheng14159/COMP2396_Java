@@ -1,16 +1,30 @@
 
 public class Pair extends Hand {
-
-	@Override
-	boolean isValid() {
-		// TODO Auto-generated method stub
-		return false;
+	
+	Pair(CardGamePlayer player, CardList cards){
+		super(player, cards); 
 	}
 
-	@Override
+	boolean isValid() {
+		if(list.isEmpty()){//not empty
+			return false;
+		}else if(list.size() != 2){//size correct
+			return false;
+		}else{//check 
+			if( list.getCard(0).rank == list.getCard(1).rank ){
+				return true;
+			}else{
+				return false;
+			}
+		}
+	}
+
+	public Card getTopCard(){
+		return list.getCard(1);
+	}
+	
 	String getType() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Pair";
 	}
 
 }

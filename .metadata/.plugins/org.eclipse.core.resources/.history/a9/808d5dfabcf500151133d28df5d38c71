@@ -1,0 +1,14 @@
+
+public class Flush extends Hand {
+
+	@Override
+	boolean isValid() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	String getType() {
+		return "Flush";
+	}
+
+}

@@ -1,0 +1,29 @@
+
+public class BigTwoCard extends Card {
+
+	public BigTwoCard(int suit, int rank){
+		super(suit, rank);
+	}
+	
+	public int compareTo(Card card){
+		switch(card.rank){
+		case 1:
+			if(this.rank == 2){
+				if(this.suit == card.suit){
+					return 0;
+				}else if(this.suit > card.suit){
+					return 1;
+				}else{
+					return -1;
+				}
+			}else{
+				return -1;
+			}
+		case 0:
+			
+			break;
+		}
+		 
+		
+	}
+}

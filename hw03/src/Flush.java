@@ -1,15 +1,30 @@
 
 public class Flush extends Hand {
-
-	@Override
+	
+	Flush(CardGamePlayer player, CardList cards){
+		super(player, cards); 
+	}
+	
 	boolean isValid() {
-		// TODO Auto-generated method stub
-		return false;
+		if(list.isEmpty()){//not empty
+			return false;
+		}else if(list.size() != 5){//size correct
+			return false;
+		}else{//check suit
+			for(int i = 0 ; i < 5 ; i++){
+				if(list.getCard(0).suit != list.getCard(i).suit){
+					return false;
+				}
+			}
+			return true;
+		}
 	}
 
-	@Override
+	public Card getTopCard(){
+		return list.getCard(4);
+	}
+	
 	String getType() {
-		// TODO Auto-generated method stub
 		return "Flush";
 	}
 

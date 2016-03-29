@@ -1,0 +1,16 @@
+
+public class Single extends Hand {
+
+	Single(CardGamePlayer player, CardList cards){
+		super(player, cards); 
+	}
+
+	boolean isValid() {
+		return true;
+	}
+
+	String getType() {
+		return "Single";
+	}
+
+}

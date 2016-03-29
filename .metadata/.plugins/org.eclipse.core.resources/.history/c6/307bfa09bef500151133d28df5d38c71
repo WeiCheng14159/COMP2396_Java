@@ -1,0 +1,16 @@
+
+public class Flush extends Hand {
+	
+	Flush(CardGamePlayer player, CardList cards){
+		super(player, cards); 
+	}
+	
+	boolean isValid() {
+		
+	}
+
+	String getType() {
+		return "Flush";
+	}
+
+}

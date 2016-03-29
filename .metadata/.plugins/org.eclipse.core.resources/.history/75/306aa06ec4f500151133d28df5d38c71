@@ -1,0 +1,28 @@
+
+public class FullHouse extends Hand {
+
+	FullHouse(CardGamePlayer player, CardList cards){
+		super(player, cards); 
+	}
+	
+	boolean isValid() {
+		if( (list.getCard(0).rank == list.getCard(1).rank && list.getCard(1).rank == list.getCard(2).rank && list.getCard(3).rank == list.getCard(4).rank
+				) || ( list.getCard(0).rank == list.getCard(1).rank && list.getCard(2).rank == list.getCard(3).rank && list.getCard(3).rank == list.getCard(4).rank) ){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	public Card getTopCard(){
+		if( list.getCard(0).rank == list.getCard(1).rank && list.getCard(1).rank == list.getCard(2).rank && list.getCard(3).rank == list.getCard(4).rank ){
+			return list.getCard(2);
+		}else if()
+				
+	}
+	
+	String getType() {	
+		return "FullHouse";
+	}
+
+}

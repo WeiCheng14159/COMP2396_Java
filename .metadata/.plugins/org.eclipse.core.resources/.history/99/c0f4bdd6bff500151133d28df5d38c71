@@ -1,0 +1,29 @@
+
+public class Flush extends Hand {
+	
+	Flush(CardGamePlayer player, CardList cards){
+		super(player, cards); 
+	}
+	
+	boolean isValid() {
+		if(list.isEmpty()){//not empty
+			return false;
+		}else if(list.size() != 5){//size correct
+			return false;
+		}else{//check suit
+			for(int i = 0 ; i < 5 ; i++){
+				if(list.getCard(0).suit != list.getCard(i).suit){
+					return false;
+				}
+			}//check rank
+			Card samllest = list.getCard(0);
+			Card larget = list.getCard(4);
+			
+		}
+	}
+
+	String getType() {
+		return "Flush";
+	}
+
+}

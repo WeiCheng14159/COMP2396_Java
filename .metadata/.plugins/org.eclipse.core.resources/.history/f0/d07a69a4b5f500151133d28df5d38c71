@@ -1,0 +1,17 @@
+
+public class BigTwoCard extends Card {
+
+	public BigTwoCard(int suit, int rank){
+		super(suit, rank);
+	}
+	
+	public int compareTo(Card card){
+		int myRank = this.rank;
+		int HisRank = card.rank;
+		 if(myRank == 0 || myRank == 1){
+			 myRank += 13;
+		 }
+		 
+		
+	}
+}
