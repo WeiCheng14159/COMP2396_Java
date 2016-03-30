@@ -3,7 +3,7 @@
 	<section name="javadoc">
 		<item value="package" key="access"/>
 		<item value="false" key="noindex"/>
-		<item value="/Users/chengwei/Documents/workspace/lab06/javadoc.xml" key="antpath"/>
+		<item value="/Users/chengwei/Documents/workspace/hw03/javadoc.xml" key="antpath"/>
 		<item value="false" key="nodeprecatedlist"/>
 		<item value="true" key="use"/>
 		<item value="true" key="author"/>
@@ -17,7 +17,7 @@
 		<item value="true" key="splitindex"/>
 		<item value="true" key="fromStandard"/>
 		<item value="false" key="notree"/>
-		<item value="/Users/chengwei/Documents/workspace/lab06/doc" key="destdir"/>
+		<item value="/Users/chengwei/Documents/workspace/hw03/doc" key="destdir"/>
 		<item value="false" key="openinbrowser"/>
 		<section name="projects">
 			<section name="hw02">
@@ -48,6 +48,11 @@
 			<section name="temp">
 				<item value="/Users/chengwei/Documents/workspace/temp/javadoc.xml" key="antpath"/>
 				<item value="/Users/chengwei/Documents/workspace/temp/doc" key="destdir"/>
+				<item value="" key="href"/>
+			</section>
+			<section name="hw03">
+				<item value="/Users/chengwei/Documents/workspace/hw03/javadoc.xml" key="antpath"/>
+				<item value="/Users/chengwei/Documents/workspace/hw03/doc" key="destdir"/>
 				<item value="" key="href"/>
 			</section>
 			<section name="lab03Sol">
