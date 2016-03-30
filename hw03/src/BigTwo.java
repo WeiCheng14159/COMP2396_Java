@@ -46,6 +46,10 @@ public class BigTwo {
 		/*For debug use**************************************************/
 	}
 	
+    /**
+     *  create a BigTwo game test the game
+     * @param input argument
+     */
 	public static void main(String[] args) {
 		BigTwo firstRound = new BigTwo();
 		firstRound.start();
