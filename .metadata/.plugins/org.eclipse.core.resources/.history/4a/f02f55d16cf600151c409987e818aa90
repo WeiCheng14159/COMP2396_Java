@@ -37,7 +37,7 @@ public class BigTwo {
 		
 		//before everything begin make sure everything is right
 		/*For debug use**************************************************/
-		/*System.out.println("Num of player: "+numOfPlayer);
+		System.out.println("Num of player: "+numOfPlayer);
 		for( CardGamePlayer p : playerList){
 			System.out.println("name: "+p.getName()+"score: "+p.getScore()+"num hand: "+p.getNumOfCards()+" list: ");
 			p.getCardsInHand().print();
@@ -48,6 +48,7 @@ public class BigTwo {
 	
 	public static void main(String[] args) {
 		BigTwo firstRound = new BigTwo();
+		System.out.println("gogog");
 		firstRound.start();
 	}
 	
