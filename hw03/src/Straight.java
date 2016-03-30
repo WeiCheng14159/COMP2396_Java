@@ -44,5 +44,4 @@ public class Straight extends Hand {
 	String getType() {
 		return "Straight";
 	}
-
 }
