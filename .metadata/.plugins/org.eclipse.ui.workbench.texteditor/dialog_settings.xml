@@ -2,22 +2,29 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="study" key="selection"/>
+		<item value="uncheckHand" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="study"/>
-			<item value="getName"/>
-			<item value="slist"/>
-			<item value="rotate"/>
-			<item value="area"/>
-			<item value="getX"/>
-			<item value="build"/>
-			<item value="setAp"/>
+			<item value="waitToBeCheck"/>
+			<item value="playerList.get(currentIdx)"/>
+			<item value="prevHand"/>
+			<item value="orderB"/>
+			<item value="orderA"/>
+			<item value="code"/>
+			<item value="go"/>
+			<item value="gogo"/>
 		</list>
 		<list key="replacehistory">
+			<item value="uncheckHand"/>
+			<item value="currentPlayer"/>
+			<item value="cardB"/>
+			<item value="cardA"/>
+			<item value="me"/>
+			<item value="others"/>
+			<item value="list"/>
 			<item value="println"/>
 		</list>
 	</section>
@@ -25,7 +32,7 @@
 		<item value="265" key="DIALOG_WIDTH"/>
 		<item value="1|.SF NS Text|11.0|0|COCOA|1|.SFNSText-Regular" key="DIALOG_FONT_NAME"/>
 		<item value="399" key="DIALOG_HEIGHT"/>
-		<item value="280" key="DIALOG_X_ORIGIN"/>
-		<item value="412" key="DIALOG_Y_ORIGIN"/>
+		<item value="928" key="DIALOG_X_ORIGIN"/>
+		<item value="256" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

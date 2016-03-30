@@ -11,6 +11,7 @@ public class BigTwo {
 		
 		numOfPlayer=4;
 		playerList = new ArrayList<CardGamePlayer>();
+		handsOnTable = new ArrayList<Hand>();
 		deck = new BigTwoDeck();
 		deck.initialize();
 
@@ -35,9 +36,12 @@ public class BigTwo {
 	public void start(){
 		//initialization
 		boolean firstPlay = true;
-		handsOnTable = new ArrayList<Hand>();
 		Hand prevHand=null;
+		Hand uncheckHand=null;
+		boolean endOfGame = false;
+		boolean nextPlayer = false;
 		
+		int roundCount=1;
 		//who has smallest three ? 
 		Card smallThree = new BigTwoCard(0,2); 		
 		for( int i = 0 ; i < playerList.size();i++){
@@ -48,8 +52,11 @@ public class BigTwo {
 		}
 		//
 		
-		boolean endOfGame = false;
 		while(!endOfGame){
+			nextPlayer = false;
+			System.out.println("round count"+roundCount);
+			roundCount++;
+			
 			for( int i = 0 ; i < 4 ; i++){
 				System.out.println(playerList.get(i).getName());
 				if( i == currentIdx ){
@@ -59,43 +66,48 @@ public class BigTwo {
 				}
 			}
 			
-			boolean nextPlayer = false;
+			CardGamePlayer currentPlayer = playerList.get(currentIdx);
+			
 			if( firstPlay){//first time play, player cannot pass, must play smallest three
 				firstPlay = false;
 				while (!nextPlayer){
-					CardList userWantToPlay = playerList.get(currentIdx).play(null);//prompt user for input
-					if(userWantToPlay != null){
-						Hand waitToBeCheck = new Hand(playerList.get(currentIdx),userWantToPlay);
-						if(userWantToPlay.contains(smallThree) && waitToBeCheck.isValid()){
-							nextPlayer = true;
-							//let user play 
-							playerList.get(currentIdx).removeCards(userWantToPlay);
-							//add to hands on table
-							handsOnTable.add(waitToBeCheck);
-							prevHand = waitToBeCheck;
+					CardList userWantToPlay = currentPlayer.play(prevHand);//prompt user for input
+					if(userWantToPlay != null){//user play cards
+						uncheckHand = new Hand(currentPlayer,userWantToPlay);
+						if( uncheckHand.isValid() ){//first play must contain small three card
+							if(userWantToPlay.contains(smallThree) ){
+								nextPlayer = true;
+								//let user play 
+								currentPlayer.removeCards(userWantToPlay);
+								//add to hands on table
+								handsOnTable.add(uncheckHand);
+								prevHand = uncheckHand;
+							}else{
+								System.out.println("you must play small three");
+							}
 						}else{
-							System.out.println("not allow to play");
+							System.out.println("not valid hand");
 						}
-					}else{
+					}else{//user play nothing
 						System.out.println("cannot play nothing! ");
 					}
-					
 				}
 			}else{//normal play 
 				while (!nextPlayer){
-					CardList userWantToPlay = playerList.get(currentIdx).play(null);//prompt user for input
-					if(userWantToPlay != null){
-						Hand waitToBeCheck = new Hand(playerList.get(currentIdx),userWantToPlay);
-						if(waitToBeCheck.isValid() && allowToPlay(prevHand, waitToBeCheck)){
-							nextPlayer = true;
-							//let user play 
-							playerList.get(currentIdx).removeCards(userWantToPlay);
-							
-							//add to hands on table
-							handsOnTable.add(waitToBeCheck);
-							prevHand = waitToBeCheck;
+					CardList userWantToPlay = currentPlayer.play(prevHand);//prompt user for input
+					if(userWantToPlay != null){//user play cards
+						uncheckHand = new Hand(currentPlayer,userWantToPlay);
+						if( uncheckHand.isValid() ){
+							if(uncheckHand.beats(prevHand)){
+								nextPlayer = true;
+								//let user play 
+								currentPlayer.removeCards(userWantToPlay);
+								//add to hands on table
+								handsOnTable.add(uncheckHand);
+								prevHand = uncheckHand;
+							}
 						}else{
-							System.out.println("not allow to play");
+							System.out.println("not valid hand");
 						}
 					}else{//user pass
 						nextPlayer = true;
@@ -109,22 +121,12 @@ public class BigTwo {
 				currentIdx++;
 				currentIdx = currentIdx % 4;
 			}
-			for(Hand temp : handsOnTable){
-				temp.print();
-			}
+			
 		}
 		
 		System.out.println("Game ends");
 		for ( CardGamePlayer p : playerList ){
 			System.out.println(p.getName()+" has "+p.getNumOfCards()+" of cards in hand. ");
-		}
-	}
-	
-	boolean allowToPlay(Hand handOnTable, Hand WhatIPlay){
-		if(handOnTable.beats(WhatIPlay)){
-			return false;
-		}else{
-			return true;
 		}
 	}
 	
