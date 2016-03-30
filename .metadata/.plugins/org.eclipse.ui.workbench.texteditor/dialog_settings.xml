@@ -2,12 +2,13 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="validHandList" key="selection"/>
+		<item value="name" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="true" key="wholeword"/>
 		<list key="findhistory">
+			<item value="name"/>
 			<item value="me"/>
 			<item value="prevHand"/>
 			<item value="uncheckHand"/>
@@ -15,7 +16,6 @@
 			<item value="myTopCard"/>
 			<item value="otherHandList"/>
 			<item value="myHandList"/>
-			<item value="otherHandType"/>
 		</list>
 		<list key="replacehistory">
 			<item value="validHandList"/>

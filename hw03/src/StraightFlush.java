@@ -1,11 +1,24 @@
 import java.util.ArrayList;
-
+/**
+ * This class models StraightFlush hand played in a BigTwo card game
+ * @author chengwei
+ *
+ */
 public class StraightFlush extends Hand {
 
+	/**
+	 * create and return an instance of StraightFlush class
+	 * @param player Who play this hand
+	 * @param cards  A list of cards in this StraightFlush object
+	 */
 	StraightFlush(CardGamePlayer player, CardList cards){
 		super(player, cards); 
 	}
 	
+	/**
+	 * determining whether this object is really a StraightFlush 
+	 * @return a boolean value specifying whether this is really a StraightFlush
+	 */
 	boolean isValid() {
 		if(list.isEmpty()){//not empty
 			return false;
@@ -35,6 +48,10 @@ public class StraightFlush extends Hand {
 		}
 	}
 	
+	/**
+	 * return the top card in a StraightFlush
+	 * @return a Card object 
+	 */
 	public Card getTopCard(){
 		if( list.getCard(4).getRank() - list.getCard(0).getRank() == 4){
 			return list.getCard(4);
@@ -49,6 +66,10 @@ public class StraightFlush extends Hand {
 		} 
 	}
 
+	/**
+	 * return a the name of this hand
+	 * @return a "StraightFlush" string
+	 */
 	String getType() {
 		return "StraightFLush";
 	}
