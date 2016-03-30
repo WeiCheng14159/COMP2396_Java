@@ -1,11 +1,24 @@
 import java.util.*;
-
+/**
+ * This class models Straight hand played in a BigTwo card game
+ * @author chengwei
+ *
+ */
 public class Straight extends Hand {
 
+	/**
+	 * create and return an instance of Straight class
+	 * @param player Who play this hand
+	 * @param cards  A list of cards in this Straight object
+	 */
 	Straight(CardGamePlayer player, CardList cards){
 		super(player, cards); 
 	}
 	
+	/**
+	 * determining whether this object is really a Straight 
+	 * @return a boolean value specifying whether this is really a Straight
+	 */
 	boolean isValid() {
 		if(list.isEmpty()){//not empty
 			return false;
@@ -30,6 +43,10 @@ public class Straight extends Hand {
 		}
 	}
 	
+	/**
+	 * return the top card in a Straight
+	 * @return a Card object 
+	 */
 	public Card getTopCard(){
 		if( list.getCard(4).rank - list.getCard(0).rank == 4){
 			return list.getCard(4);
@@ -44,6 +61,10 @@ public class Straight extends Hand {
 		}
 	}
 	
+	/**
+	 * return a the name of this hand
+	 * @return a "Straight" string
+	 */
 	String getType() {
 		return "Straight";
 	}

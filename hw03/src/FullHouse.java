@@ -1,10 +1,23 @@
-
+/**
+ * This class models FullHouse hand played in a BigTwo card game
+ * @author chengwei
+ *
+ */
 public class FullHouse extends Hand {
-
+	
+	/**
+	 * create and return an instance of FullHouse class
+	 * @param player Who play this hand
+	 * @param cards  A list of cards in this FullHouse object
+	 */
 	FullHouse(CardGamePlayer player, CardList cards){
 		super(player, cards); 
 	}
 	
+	/**
+	 * determining whether this object is really a FullHouse 
+	 * @return a boolean value specifying whether this is really a FullHouse
+	 */
 	boolean isValid() {
 		if(list.isEmpty()){//not empty
 			return false;
@@ -20,6 +33,10 @@ public class FullHouse extends Hand {
 		}
 	}
 	
+	/**
+	 * return the top card in a FullHouse
+	 * @return a Card object 
+	 */
 	public Card getTopCard(){
 		if( list.getCard(0).getRank() == list.getCard(1).getRank() && list.getCard(1).getRank() == list.getCard(2).getRank() && list.getCard(3).getRank() == list.getCard(4).getRank() ){
 			return list.getCard(2);//three cards with same rank at front
@@ -30,6 +47,10 @@ public class FullHouse extends Hand {
 		}
 	}
 	
+	/**
+	 * return a the name of this hand
+	 * @return a "FullHouse" string
+	 */
 	String getType() {	
 		return "FullHouse";
 	}

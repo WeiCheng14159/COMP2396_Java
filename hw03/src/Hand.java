@@ -1,9 +1,18 @@
-
+/**
+ * This class models Hand played in a BigTwo card game
+ * @author chengwei
+ *
+ */
 public class Hand extends CardList {
 	
 	private CardGamePlayer player;
 	protected CardList list;
 	
+	/**
+	 * create and return an instance of Hand class
+	 * @param player Who play this hand
+	 * @param cards  A list of cards in this hand object
+	 */
 	public Hand( CardGamePlayer player, CardList cards){
 		cards.sort();
 		this.removeAllCards();
@@ -14,15 +23,29 @@ public class Hand extends CardList {
 		this.player=player;
 	}
 	
+	/**
+	 * return a gamePlayer who play this hand
+	 * @return a cardGamePlayer
+	 */
 	public CardGamePlayer getPlayer(){
 		return this.player;
 	}
 	
+	/**
+	 * return the top card in a hand
+	 * this method will be overridden in all subclasses.
+	 * @return a Card object 
+	 */
 	public Card getTopCard(){
 		System.out.println("err");
 		return null;
 	}
 	
+	/**
+	 * compare two hands played in a BigTwo game 
+	 * @param hand Which hand to compare with 
+	 * @return a boolean value, true if other hand can beat this hand, false if other hand cannot beat this hand
+	 */
 	public boolean beats(Hand hand){//make sure that these two hands are all valid hands
 		
 		int defendorType = 0;//this hand object
@@ -94,6 +117,10 @@ public class Hand extends CardList {
 		}	
 	}
 	
+	/**
+	 * determining whether this object is really a hand player in a BigTwo game 
+	 * @return a boolean value specifying whether this is really a hand
+	 */
 	boolean isValid(){
 		Hand [] validHandList = new Hand[8];
 		int valid = -1;
@@ -121,8 +148,12 @@ public class Hand extends CardList {
 		}
 	}
 	
+	/**
+	 * return a the name of this hand
+	 * this method will be overridden in all subclasses
+	 * @return an error string  
+	 */
 	String getType(){
-		System.out.println("err");
 		return "err";
 	}
 }
