@@ -1,6 +1,6 @@
 
 public class Straight extends Hand {
-
+//hahahah
 	Straight(CardGamePlayer player, CardList cards){
 		super(player, cards); 
 	}
