@@ -26,6 +26,10 @@ public class StraightFlush extends Hand {
 				}
 			}
 			rankArray.sort(null);
+			
+			for (int temp : rankArray){
+				System.out.print(temp+",");
+			}
 			for(int i = 1 ; i < 5 ; i++){
 				if(rankArray.get(i) - rankArray.get(i-1) != 1){
 					return false;

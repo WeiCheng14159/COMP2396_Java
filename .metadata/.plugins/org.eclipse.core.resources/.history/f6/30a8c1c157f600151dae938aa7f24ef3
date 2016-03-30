@@ -1,4 +1,3 @@
-import java.util.*;
 
 public class Straight extends Hand {
 
@@ -12,17 +11,18 @@ public class Straight extends Hand {
 		}else if(list.size() != 5){//size correct
 			return false;
 		}else{//check rank
-			ArrayList<Integer> rankArray = new ArrayList<Integer>();
+			int [] rankArray = new int [5];
 			for( int i = 0 ; i < 5 ; i++){//find out big 2 and ace
-				rankArray.add(list.getCard(i).getRank());
+				rankArray[i] = list.getCard(i).getRank();
 				if(list.getCard(i).getRank() == 0 || list.getCard(i).getRank() == 1){
-					rankArray.set(i, rankArray.get(i) + 13) ;
+					rankArray[i] += 13;
 				}
 			}
-			rankArray.sort(null);
-			
+			for (int temp : rankArray){
+				System.out.print(temp+",");
+			}
 			for(int i = 1 ; i < 5 ; i++){
-				if(rankArray.get(i) - rankArray.get(i-1) != 1){
+				if(rankArray[i] - rankArray[i-1] != 1){
 					return false;
 				}
 			}

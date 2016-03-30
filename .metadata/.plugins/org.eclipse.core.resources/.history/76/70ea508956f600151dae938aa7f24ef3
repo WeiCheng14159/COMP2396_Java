@@ -117,6 +117,7 @@ public class Hand extends CardList {
 		if(valid != -1 ){
 			return true;
 		}else{
+			
 			return false;
 		}
 	}

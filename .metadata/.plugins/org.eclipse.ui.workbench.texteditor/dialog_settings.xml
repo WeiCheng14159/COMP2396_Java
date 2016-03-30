@@ -2,12 +2,13 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="prevPlayerHand" key="selection"/>
+		<item value="validHandList" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="true" key="wholeword"/>
 		<list key="findhistory">
+			<item value="me"/>
 			<item value="prevHand"/>
 			<item value="uncheckHand"/>
 			<item value="HisTopCard"/>
@@ -15,9 +16,9 @@
 			<item value="otherHandList"/>
 			<item value="myHandList"/>
 			<item value="otherHandType"/>
-			<item value="myHandType"/>
 		</list>
 		<list key="replacehistory">
+			<item value="validHandList"/>
 			<item value="prevPlayerHand"/>
 			<item value="currentPlayerHand"/>
 			<item value="attackerTopCard"/>
@@ -25,7 +26,6 @@
 			<item value="attackerHandList"/>
 			<item value="defendorHandList"/>
 			<item value="attackerType"/>
-			<item value="defendorType"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

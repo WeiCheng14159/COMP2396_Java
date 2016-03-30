@@ -71,7 +71,7 @@ public class Hand extends CardList {
 		//System.out.println("attacker hand type :"+attackerType);
 		
 		if(defendorType == attackerType){//same card type, compare topcard
-			//System.out.println("same type comapre top card");
+			System.out.println("same type comapre top card");
 			BigTwoCard defendorTopCard = new BigTwoCard(defendorHandList[defendorType].getTopCard().getSuit(), defendorHandList[defendorType].getTopCard().getRank());
 			BigTwoCard attackerTopCard = new BigTwoCard(attackerHandList[attackerType].getTopCard().getSuit(), attackerHandList[attackerType].getTopCard().getRank());
 			//System.out.println(defendorTopCard.toString()+attackerTopCard.toString());
@@ -117,6 +117,7 @@ public class Hand extends CardList {
 		if(valid != -1 ){
 			return true;
 		}else{
+			
 			return false;
 		}
 	}
