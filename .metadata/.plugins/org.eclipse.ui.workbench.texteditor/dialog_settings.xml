@@ -2,30 +2,30 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="uncheckHand" key="selection"/>
+		<item value="prevPlayerHand" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
-		<item value="false" key="wholeword"/>
+		<item value="true" key="wholeword"/>
 		<list key="findhistory">
-			<item value="waitToBeCheck"/>
-			<item value="playerList.get(currentIdx)"/>
 			<item value="prevHand"/>
-			<item value="orderB"/>
-			<item value="orderA"/>
-			<item value="code"/>
-			<item value="go"/>
-			<item value="gogo"/>
+			<item value="uncheckHand"/>
+			<item value="HisTopCard"/>
+			<item value="myTopCard"/>
+			<item value="otherHandList"/>
+			<item value="myHandList"/>
+			<item value="otherHandType"/>
+			<item value="myHandType"/>
 		</list>
 		<list key="replacehistory">
-			<item value="uncheckHand"/>
-			<item value="currentPlayer"/>
-			<item value="cardB"/>
-			<item value="cardA"/>
-			<item value="me"/>
-			<item value="others"/>
-			<item value="list"/>
-			<item value="println"/>
+			<item value="prevPlayerHand"/>
+			<item value="currentPlayerHand"/>
+			<item value="attackerTopCard"/>
+			<item value="defendorTopCard"/>
+			<item value="attackerHandList"/>
+			<item value="defendorHandList"/>
+			<item value="attackerType"/>
+			<item value="defendorType"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
