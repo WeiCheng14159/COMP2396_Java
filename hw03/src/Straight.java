@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class Straight extends Hand {
-
+//hahahah
 	Straight(CardGamePlayer player, CardList cards){
 		super(player, cards); 
 	}
@@ -47,5 +47,4 @@ public class Straight extends Hand {
 	String getType() {
 		return "Straight";
 	}
-
 }
