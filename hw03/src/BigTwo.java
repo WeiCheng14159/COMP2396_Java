@@ -36,12 +36,11 @@ public class BigTwo {
 	public void start(){
 		//initialization
 		boolean firstPlay = true;
-		Hand prevHand=null;
-		Hand uncheckHand=null;
+		Hand prevPlayerHand=null;
+		Hand currentPlayerHand=null;
 		boolean endOfGame = false;
 		boolean nextPlayer = false;
-		
-		int roundCount=1;
+		int howManyPeoplePass=0;
 		//who has smallest three ? 
 		Card smallThree = new BigTwoCard(0,2); 		
 		for( int i = 0 ; i < playerList.size();i++){
@@ -50,12 +49,10 @@ public class BigTwo {
 				break;
 			}
 		}
-		//
 		
 		while(!endOfGame){
 			nextPlayer = false;
-			System.out.println("round count"+roundCount);
-			roundCount++;
+			System.out.println("people pass count"+howManyPeoplePass);
 			
 			for( int i = 0 ; i < 4 ; i++){
 				System.out.println(playerList.get(i).getName());
@@ -65,52 +62,61 @@ public class BigTwo {
 					playerList.get(i).getCardsInHand().print(false,true);
 				}
 			}
+			System.out.println("<table>");//print out player's cards
+			if(firstPlay){
+				System.out.println("[Empty]");
+			}else{
+				handsOnTable.get(handsOnTable.size()-1).print();
+			}
 			
 			CardGamePlayer currentPlayer = playerList.get(currentIdx);
 			
-			if( firstPlay){//first time play, player cannot pass, must play smallest three
-				firstPlay = false;
-				while (!nextPlayer){
-					CardList userWantToPlay = currentPlayer.play(prevHand);//prompt user for input
-					if(userWantToPlay != null){//user play cards
-						uncheckHand = new Hand(currentPlayer,userWantToPlay);
-						if( uncheckHand.isValid() ){//first play must contain small three card
+			while (!nextPlayer){
+				CardList userWantToPlay = currentPlayer.play(prevPlayerHand);//prompt user for input
+				if(userWantToPlay != null){//user play cards
+					currentPlayerHand = new Hand(currentPlayer,userWantToPlay);
+					if(currentPlayerHand.isValid()){//play hand is valid
+						if(firstPlay){//first play
 							if(userWantToPlay.contains(smallThree) ){
+								firstPlay = false;
 								nextPlayer = true;
-								//let user play 
 								currentPlayer.removeCards(userWantToPlay);
-								//add to hands on table
-								handsOnTable.add(uncheckHand);
-								prevHand = uncheckHand;
+								handsOnTable.add(currentPlayerHand);
+								prevPlayerHand = currentPlayerHand;
 							}else{
-								System.out.println("you must play small three");
+								System.out.println("you must play diamond three");
 							}
-						}else{
-							System.out.println("not valid hand");
-						}
-					}else{//user play nothing
-						System.out.println("cannot play nothing! ");
-					}
-				}
-			}else{//normal play 
-				while (!nextPlayer){
-					CardList userWantToPlay = currentPlayer.play(prevHand);//prompt user for input
-					if(userWantToPlay != null){//user play cards
-						uncheckHand = new Hand(currentPlayer,userWantToPlay);
-						if( uncheckHand.isValid() ){
-							if(uncheckHand.beats(prevHand)){
+						}else{//not first play, normal round
+							//main loop
+							
+							if(howManyPeoplePass >= 3){//you can play any hand
+								howManyPeoplePass=0;
 								nextPlayer = true;
-								//let user play 
 								currentPlayer.removeCards(userWantToPlay);
-								//add to hands on table
-								handsOnTable.add(uncheckHand);
-								prevHand = uncheckHand;
+								handsOnTable.add(currentPlayerHand);
+								prevPlayerHand = currentPlayerHand;
+							}else{//you must beat someone
+								if(currentPlayerHand.beats(prevPlayerHand)){//you beat it !
+									howManyPeoplePass=0;
+									nextPlayer = true;
+									currentPlayer.removeCards(userWantToPlay);
+									handsOnTable.add(currentPlayerHand);
+									prevPlayerHand = currentPlayerHand;
+								}else{//not big enough
+									System.out.println("Invalid move, your hand is smaller than hands on the table !");
+								}
 							}
-						}else{
-							System.out.println("not valid hand");
 						}
-					}else{//user pass
+						
+					}else{
+						System.out.println("Invalid Hand");
+					}
+				}else{//user play nothing
+					if(firstPlay){//you must play the first hand
+						System.out.println("cannot play nothing! ");
+					}else{//you pass this round
 						nextPlayer = true;
+						howManyPeoplePass++;
 					}
 				}
 			}
@@ -121,7 +127,6 @@ public class BigTwo {
 				currentIdx++;
 				currentIdx = currentIdx % 4;
 			}
-			
 		}
 		
 		System.out.println("Game ends");

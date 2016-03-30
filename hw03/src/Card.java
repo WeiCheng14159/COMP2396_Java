@@ -62,7 +62,7 @@ public class Card implements Comparable<Card> {
 	 * @param card the card to be compared
 	 * @return a negative integer, zero, or a positive integer as this card is less than, equal to, or greater than the specified card
 	 */
-	public int compareTo(Card card) {
+	public int compareTo(Card card){
 		if (this.rank > card.rank) {
 			return 1;
 		} else if (this.rank < card.rank) {

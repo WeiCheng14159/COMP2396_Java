@@ -12,7 +12,7 @@ public class Flush extends Hand {
 			return false;
 		}else{//check suit
 			for(int i = 0 ; i < 5 ; i++){
-				if(list.getCard(0).suit != list.getCard(i).suit){
+				if(list.getCard(0).getSuit() != list.getCard(i).getSuit()){
 					return false;
 				}
 			}

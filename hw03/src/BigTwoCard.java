@@ -6,8 +6,10 @@ public class BigTwoCard extends Card {
 	}
 	
 	public int compareTo(Card card){
-		int myRank = rank;
-		int HisRank = card.rank;
+		int myRank = this.getRank();
+		int HisRank = card.getRank();
+		//System.out.println(myRank);
+		//System.out.println(HisRank);
 		 if(myRank == 0 || myRank == 1 ){//rank = 2 or A
 			 myRank += 13;
 		 }
@@ -16,14 +18,15 @@ public class BigTwoCard extends Card {
 		 }
 		 if (myRank > HisRank) {
 				return 1;
-			} else if (myRank < HisRank) {
+		 }else if (myRank < HisRank) {
 				return -1;
-			} else if (suit > card.suit) {
+		 }else if (this.getSuit() > card.getSuit()) {
 				return 1;
-			} else if (suit < card.suit) {
+		 }else if (this.getSuit() < card.getSuit()) {
 				return -1;
-			} else {
+		 }else {
+				System.out.println("two cards are the same");
 				return 0;
-			}
+		}
 	}
 }

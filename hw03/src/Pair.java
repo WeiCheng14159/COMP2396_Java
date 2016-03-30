@@ -11,7 +11,7 @@ public class Pair extends Hand {
 		}else if(list.size() != 2){//size correct
 			return false;
 		}else{//check 
-			if( list.getCard(0).rank == list.getCard(1).rank ){
+			if( list.getCard(0).getRank() == list.getCard(1).getRank() ){
 				return true;
 			}else{
 				return false;

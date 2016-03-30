@@ -11,11 +11,19 @@ public class Straight extends Hand {
 		}else if(list.size() != 5){//size correct
 			return false;
 		}else{//check rank
-			if( list.getCard(4).rank - list.getCard(0).rank == 4 || list.getCard(4).rank - list.getCard(0).rank == 12){
-				return true;
-			}else{
-				return false;
+			int [] rankArray = new int [5];
+			for( int i = 0 ; i < 5 ; i++){
+				if(list.getCard(i).getRank() == 0 || list.getCard(i).getRank() == 1){
+					rankArray[i] += list.getCard(i).getRank();
+				}
 			}
+			
+			for(int i = 1 ; i < 5 ; i++){
+				if(rankArray[i] - rankArray[i-1] != 1){
+					return false;
+				}
+			}
+			return true;
 		}
 	}
 	

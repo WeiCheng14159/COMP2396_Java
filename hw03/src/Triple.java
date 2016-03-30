@@ -11,7 +11,7 @@ public class Triple extends Hand {
 		}else if(list.size() != 3){//size correct
 			return false;
 		}else{
-			if( list.getCard(0).rank == list.getCard(1).rank && list.getCard(1).rank == list.getCard(2).rank ){
+			if( list.getCard(0).getRank() == list.getCard(1).getRank() && list.getCard(1).getRank() == list.getCard(2).getRank() ){
 				return true;
 			}else{
 				return false;

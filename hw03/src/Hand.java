@@ -19,62 +19,74 @@ public class Hand extends CardList {
 	}
 	
 	public Card getTopCard(){
+		System.out.println("err");
 		return null;
 	}
 	
-	public boolean beats(Hand hand){
+	public boolean beats(Hand hand){//make sure that these two hands are all valid hands
 		
-		int cardA = 0;
-		int cardB = 0;
+		int defendorType = 0;//this hand object
+		int attackerType = 0;//hand object
 		
-		Hand [] others = new Hand[8];
+		Hand [] defendorHandList = new Hand[8];
 		
-		others[0] = new Flush(hand.player, hand.list);
-		others[1] = new FullHouse(hand.player, hand.list);
-		others[2] = new Pair(hand.player, hand.list);
-		others[3] = new Quad(hand.player, hand.list);
-		others[4] = new Single(hand.player, hand.list);
-		others[5] = new Straight(hand.player, hand.list);
-		others[6] = new StraightFlush(hand.player, hand.list);
-		others[7] = new Triple(hand.player, hand.list);
+		defendorHandList[0] = new Single(hand.player, hand.list);
+		defendorHandList[1] = new Pair(hand.player, hand.list);
+		defendorHandList[2] = new Triple(hand.player, hand.list);
 		
-		Hand [] me = new Hand[8];
-		
-		me[0] = new Flush(player, list);
-		me[1] = new FullHouse(player, list);
-		me[2] = new Pair(player, list);
-		me[3] = new Quad(player, list);
-		me[4] = new Single(player, list);
-		me[5] = new Straight(player, list);
-		me[6] = new StraightFlush(player, list);
-		me[7] = new Triple(player, list);
-		
+		defendorHandList[3] = new Straight(hand.player, hand.list);
+		defendorHandList[4] = new Flush(hand.player, hand.list);
+		defendorHandList[5] = new FullHouse(hand.player, hand.list);
+		defendorHandList[6] = new Quad(hand.player, hand.list);
+		defendorHandList[7] = new StraightFlush(hand.player, hand.list);
+		 
 		for(int i = 0 ; i < 8 ; i++){
-			if(others[i].isValid()){
-				cardA = i;
+			if(defendorHandList[i].isValid()){
+				defendorType = i;
 				break;
 			}
 		}
+
+		Hand [] attackerHandList = new Hand[8];
+		
+		attackerHandList[0] = new Single(player, list);
+		attackerHandList[1] = new Pair(player, list);
+		attackerHandList[2] = new Triple(player, list);
+	
+		attackerHandList[3] = new Straight(player, list);
+		attackerHandList[4] = new Flush(player, list);
+		attackerHandList[5] = new FullHouse(player, list);
+		attackerHandList[6] = new Quad(player, list);
+		attackerHandList[7] = new StraightFlush(player, list);
+		
+		
 		for(int i = 0 ; i < 8 ; i++){
-			if(me[i].isValid()){
-				cardB = i;
+			if(attackerHandList[i].isValid()){
+				attackerType = i;
 				break;
 			}
 		}
 		
-		if(cardA == cardB){
-			BigTwoCard myTopCard = new BigTwoCard(me[cardA].getTopCard().suit, me[cardA].getTopCard().rank);
-			BigTwoCard HisTopCard = new BigTwoCard(others[cardB].getTopCard().suit, others[cardB].getTopCard().rank);
-			
-			if( myTopCard.compareTo(HisTopCard) > 0){
-				System.out.println("haha I am biggerrrrr");
-				return true;
+		if(defendorType == attackerType){//same card type, compare topcard
+			System.out.println("same type comapre top card");
+			BigTwoCard defendorTopCard = new BigTwoCard(defendorHandList[defendorType].getTopCard().getSuit(), defendorHandList[defendorType].getTopCard().getRank());
+			BigTwoCard attackerTopCard = new BigTwoCard(attackerHandList[attackerType].getTopCard().getSuit(), attackerHandList[attackerType].getTopCard().getRank());
+			//System.out.println(defendorTopCard.toString()+attackerTopCard.toString());
+			//System.out.println(defendorTopCard.compareTo(attackerTopCard));
+			if( defendorTopCard.compareTo(attackerTopCard) > 0){
+				return false;//cannot beat me
 			}else{
-				System.out.println("gg I am smalleeeer");
-				return false;
+				return true;//can beat me
 			}
-		}else{//type mismatch
-			System.out.println("type mismatch");
+		}else if( defendorType >= 3 && attackerType >=3){//five cards in a hand, but not the same type
+			//System.out.println("five card comapre type");
+			if(defendorType > attackerType){
+				return false;
+			}else{
+				return true;
+			}
+		}
+		else{//type mismatch
 			return false;
 		}	
 	}
@@ -94,7 +106,8 @@ public class Hand extends CardList {
 		for(int i = 0 ; i < 8 ; i++){
 			if(me[i].isValid()){
 				valid = i;
-				System.out.println(me[i].getType());
+				System.out.print("{"+me[i].getType()+"}  ");
+				print();
 				break;
 			}
 		}
