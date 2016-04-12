@@ -1,7 +1,5 @@
 package hw02;
 
-import java.awt.geom.Point2D;
-
 /**
  * RegularPolygon is a subclass of shape
  * @author chengwei

@@ -11,6 +11,7 @@ public class ap {
 		
 		System.out.print("arithmetic series: ");
 		System.out.println((1+n)*n/2);
+		input.close();
 	}
 
 }

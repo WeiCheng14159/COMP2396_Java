@@ -31,7 +31,6 @@ public class Teacher extends Person {
 	 * @param c course list
 	 */
 	public void setCourses(ArrayList<String> c){
-		teach=new ArrayList<String>();
 		teach=c;
 	}
 	
