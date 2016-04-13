@@ -1,0 +1,8 @@
+import javax.swing.JPanel;
+import java.awt.*;
+
+public class MydrawPanel extends JPanel {
+	public void paintComponent (Graphics g){
+		
+	}
+}

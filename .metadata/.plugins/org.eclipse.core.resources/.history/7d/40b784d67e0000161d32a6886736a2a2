@@ -1,0 +1,19 @@
+import javax.swing.*;
+import java.awt.event.*;
+
+public class test implements ActionListener{
+
+	JButton button;
+	
+	public static void main(String[] args) {
+		test = new test();
+		test.go();
+	}
+	
+	public void go(){
+		
+		JFrame frame = new JFrame();
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+	}
+}

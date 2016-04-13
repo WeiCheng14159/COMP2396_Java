@@ -25,16 +25,20 @@ public class Exercise9 {
 	}
 	
 	void go(){
+		// make a window 
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		//create a new image
 		background = new MyImage();
 		background.readImage("images/background.jpg");
+		
 		//read album images
 		for(int i=0;i<imageNum;i++){
 			MyImage t=new MyImage("images/album"+i+".jpg");
 			images.add(t);
 		}
+		
 		//initialize the position of three images to be drawn 
 		images.get((centerIdx-1+imageNum)%imageNum).setPos(-1);
 		images.get((centerIdx+1)%imageNum).setPos(1);
@@ -53,6 +57,7 @@ public class Exercise9 {
 			int left = (centerIdx-1+imageNum)%imageNum;
 			int right = (centerIdx+1)%imageNum;		
 			images.get(left).setPos(-1);	//left images doesn't need to move, so directly set its position
+			
 			//move center and right image
 			for(int i=0;i<speed-1;i++){
 				images.get(centerIdx).moveRight(speed);
@@ -65,15 +70,18 @@ public class Exercise9 {
 					e1.printStackTrace();
 				}
 			}
+			
 			//set the final position of left and right image
 			images.get(centerIdx).setPos(0);
 			images.get(right).setPos(1);
 			frame.repaint();
+			
 			//introduce delay to the infinite loop 
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
+				//sleep fail ?
 				e1.printStackTrace();
 			}
     	}	
