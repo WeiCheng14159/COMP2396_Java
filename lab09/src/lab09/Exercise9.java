@@ -10,7 +10,7 @@ import java.util.*;
  * @author cfchen
  *
  */
-public class Exercise9 {
+public class Exercise9 implements MouseListener{
 	
 	ArrayList<MyImage> images = new ArrayList<MyImage>();
 	MyImage background;
@@ -46,17 +46,21 @@ public class Exercise9 {
 		//make your own panel
 		MyDrawPanel drawPanel = new MyDrawPanel();
 		frame.add(drawPanel);
+		frame.addMouseEvent(this);
 		frame.setSize(600, 500);
 		frame.setVisible(true);
 		
+		
     	while(true){
-        	int speed = 10;
+        	int speed = 50;
+        	
         	// change current center index and calculate the indexes of left and right images
 			centerIdx = centerIdx + imageNum - 1;
 			centerIdx %= imageNum;
 			int left = (centerIdx-1+imageNum)%imageNum;
 			int right = (centerIdx+1)%imageNum;		
 			images.get(left).setPos(-1);	//left images doesn't need to move, so directly set its position
+			//images.get(left).addMouseListener(this);
 			
 			//move center and right image
 			for(int i=0;i<speed-1;i++){
@@ -97,5 +101,35 @@ public class Exercise9 {
 			g.drawImage(images.get(rb).getContent(), images.get(rb).getPos()[0], images.get(rb).getPos()[1], this);
 			g.drawImage(images.get(centerIdx).getContent(), images.get(centerIdx).getPos()[0], images.get(centerIdx).getPos()[1], this);
 		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println("mouse clicked the area");
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println("mouse press the area");
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println("mouse release");
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println("mouse enter the area");
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println("mouse exit the area");
 	}
 }
