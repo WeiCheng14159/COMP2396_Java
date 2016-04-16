@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
+import java.awt.event.*;
 
 public class BigTwoTable implements CardGameTable {
 
@@ -29,7 +29,9 @@ public class BigTwoTable implements CardGameTable {
 		//cannot actually creata a real card game class @@ how can i pass a real object to this method ?
 		this.game=game;	
 		
-		
+		//create a frame here, is the main drawing panel
+		frame = new JFrame();
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//can i use this two method to control whether i can control the panel ? like disable the touch function ?
 		frame.setSize(1000, 1000);
@@ -118,22 +120,24 @@ public class BigTwoTable implements CardGameTable {
 	
 	class BigTwoPanel extends JPanel implements MouseListener{
 		
+		JPanel BigTwoPanel = new JPanel(); 
+		
+		//constructor function 
 		BigTwoPanel(){
 			
-			//create a frame here, is the main drawing panel
-			frame = new JFrame();
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			
-			//create object for play and pass button 
-			playButton = new JButton ("play");
-			playButton.addActionListener(this);
-			
+			//create object first
+			playButton = new JButton("play game");
 			passButton = new JButton ("pass the game");
+			
+			//create object for play button 
+			playButton.addActionListener(new PlayButtonListener());
+			passButton.addActionListener(new PassButtonListener());
 			
 			//add swing component to this panel, but how do i specify the position of the component ?
 			frame.add(playButton);
 			frame.add(passButton);
-		
+			frame.setSize(500,500);
+			frame.setVisible(true);
 		}
 		
 		@Override
@@ -166,19 +170,22 @@ public class BigTwoTable implements CardGameTable {
 			
 		}
 	}
+	
 	class PlayButtonListener implements ActionListener{
+		
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed( ActionEvent event) {
 			// TODO Auto-generated method stub
-			
+			playButton.setText("i am clicked");
 		}
 	}
+	
 	class PassButtonListener implements ActionListener{
-
+				
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent event) {
 			// TODO Auto-generated method stub
-			
+			passButton.setText("i am clicked");
 		}
 		
 	}
@@ -200,7 +207,4 @@ public class BigTwoTable implements CardGameTable {
 			
 		}
 	}
-
-	
-
 }
