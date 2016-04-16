@@ -19,7 +19,7 @@ public class test implements ActionListener{
 		button.addActionListener(this);
 		
 		frame.add(button);
-		frame.setSize(300, 300);
+		frame.setSize(300, 600);
 		frame.setVisible(true);
 		
 		//new frame
@@ -29,7 +29,7 @@ public class test implements ActionListener{
 		MydrawPanel crappy_drawing = new MydrawPanel();
 		frame1.add(crappy_drawing);
 		
-		frame1.setSize(400, 400);
+		frame1.setSize(300, 600);
 		frame1.setVisible(true);
 	}
 	
