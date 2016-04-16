@@ -59,7 +59,7 @@ public class BigTwo {
 	 * start a BigTwo card game
 	 */
 	public void start(){
-		
+	
 		//initialization variables
 		boolean firstPlay = true;
 		Hand prevPlayerHand=null;
