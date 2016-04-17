@@ -8,8 +8,7 @@ public class BigTwo implements CardGame{
 	private ArrayList<CardGamePlayer> playerList;
 	private ArrayList<Hand> handsOnTable;
 	private int currentIdx;
-	private BigTwoTable table;
-	
+
 	@Override
 	public int getNumOfPlayers() {
 		// TODO Auto-generated method stub
@@ -45,11 +44,12 @@ public class BigTwo implements CardGame{
 	 */
 	@Override
 	public void start() {
-
+	
 		//initialization variables
 		boolean firstPlay = true;
 		Hand prevPlayerHand=null;
 		Hand currentPlayerHand=null;
+		boolean endOfGame = false;
 		boolean nextPlayer = false;
 		int howManyPeoplePass=0;
 		
@@ -62,11 +62,14 @@ public class BigTwo implements CardGame{
 			}
 		}
 		
+		BigTwoTable t = new BigTwoTable(this);
+		t.setActivePlayer(currentIdx);
+		t.repaint();
+		
 		//game start
-		while(!endOfGame()){
+		while(!endOfGame){
 			nextPlayer = false;
 			
-			System.out.println();
 			for( int i = 0 ; i < 4 ; i++){
 				System.out.println(playerList.get(i).getName());
 				
@@ -86,15 +89,21 @@ public class BigTwo implements CardGame{
 				prevPlayerHand.isValid();
 			}
 			
-			//display current game here
-			
 			CardGamePlayer currentPlayer = playerList.get(currentIdx);
 			
 			while (!nextPlayer){
 				
-				//selection logic implement here
-				CardList userWantToPlay = currentPlayer.play(prevPlayerHand);//prompt player to player a hand
+				CardList userWantToPlay = new CardList();
 				
+				while (t.clicked == false){System.out.println("a");}
+				t.clicked = false;
+				for( int i = 0 ; i < t.getSelected().length;i++){
+					System.out.println(t.getSelected().length);
+					userWantToPlay.addCard(currentPlayer.getCardsInHand().getCard(i));
+				}
+				System.out.println("played");
+				
+				//CardList userWantToPlay = currentPlayer.play(prevPlayerHand);//prompt player to player a hand
 				if(userWantToPlay != null){//user play hands
 					currentPlayerHand = new Hand(currentPlayer,userWantToPlay);
 					if(currentPlayerHand.isValid()){//hand is valid
@@ -143,6 +152,14 @@ public class BigTwo implements CardGame{
 					}
 				}
 			}
+			
+			//determining whether the game is ended
+			if(playerList.get(0).getNumOfCards() == 0 || playerList.get(1).getNumOfCards() == 0 || playerList.get(2).getNumOfCards() == 0 || playerList.get(3).getNumOfCards() == 0 ){
+				endOfGame = true;//game ended
+			}else{//game continues
+				currentIdx++;
+				currentIdx = currentIdx % 4;
+			}
 		}
 		
 		//game ends, and show the game statistics 
@@ -150,7 +167,6 @@ public class BigTwo implements CardGame{
 		for ( CardGamePlayer p : playerList ){
 			System.out.println(p.getName()+" has "+p.getNumOfCards()+" of cards in hand. ");
 		}
-	
 	}
 
 	@Override
@@ -162,14 +178,7 @@ public class BigTwo implements CardGame{
 	@Override
 	public boolean endOfGame() {
 		// TODO Auto-generated method stub
-		//determining whether the game is ended
-		if(playerList.get(0).getNumOfCards() == 0 || playerList.get(1).getNumOfCards() == 0 || playerList.get(2).getNumOfCards() == 0 || playerList.get(3).getNumOfCards() == 0 ){
-			 return true;//game ended
-		}else{//game continues
-			currentIdx++;
-			currentIdx = currentIdx % 4;
-			return false;
-		}
+		return true;
 	}
 	
 public BigTwo(){
@@ -180,7 +189,6 @@ public BigTwo(){
 		handsOnTable = new ArrayList<Hand>();
 		deck = new BigTwoDeck();
 		deck.initialize();
-		BigTwoTable t = new BigTwoTable(this);
 		
 		//add card game players into the playerList and randomly distributes 13 cards for each player
 		for ( int i = 0 ; i < 4 ; i ++){
@@ -207,10 +215,10 @@ public BigTwo(){
      *  create a BigTwo game test the game
      * @param input argument
      */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		BigTwo firstRound = new BigTwo();
 		firstRound.start();
 
-	}
+	}*/
 	
 }

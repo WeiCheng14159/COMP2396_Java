@@ -1,0 +1,19 @@
+//this is the test case for big two game 
+import javax.swing.*;
+public class test {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		BigTwo a = new BigTwo();
+		//BigTwoTable t = new BigTwoTable(a);
+		//t.repaint();
+		JFrame f = new JFrame();
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		CardPanel a = new CardPanel();
+		f.add(a);
+		f.setSize(1000, 1000);
+		f.setVisible(true);
+	}
+
+}

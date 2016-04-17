@@ -172,30 +172,4 @@ public class CardGamePlayer {
 			return cards;
 		}
 	}
-
-	/**
-	 * Returns the list of cards played by this player.
-	 * 
-	 * @param cardIdx
-	 *            the list of the indices of the cards
-	 * @return the list of cards played by this player
-	 */
-	public CardList play(int[] cardIdx) {
-		if (cardIdx == null) {
-			return null;
-		}
-
-		CardList cards = new CardList();
-		for (int idx : cardIdx) {
-			if (idx >= 0 && idx < cardsInHand.size()) {
-				cards.addCard(cardsInHand.getCard(idx));
-			}
-		}
-
-		if (cards.isEmpty()) {
-			return null;
-		} else {
-			return cards;
-		}
-	}
 }
