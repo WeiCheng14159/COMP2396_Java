@@ -23,6 +23,31 @@ public class MyImage{
 	private int position = 0;
 	private float backAlpha = 0.5f;
 	private float alpha = 1.0f;
+	private boolean selected;
+	
+	/**
+	 *  return an array, where first element is the image position ( -2 if this image is neither image  on the left nor on the right)
+	 *  the second element is the image status ( 1 : clicked , 0 : for not clicked ) 
+	 * @param mx Mouse clicked x-coordinate on the screen
+	 * @param my Mouse clicked y-coordinate on the screen
+	 * @return an array with size two, first element : image position, second position : image status
+	 */
+	public int[] getSelected(int mx, int my){
+		int [] a = new int [2];
+		if( mx <= this.centerPos[0] && mx >= this.leftPos[0] && my >= this.leftPos[1] && my <= this.leftPos[1]+this.backSize[1] && this.position == -1){
+			//this is a left image and is selected
+			a[0]=-1;a[1]=1;
+			//System.out.println("left clicked");
+		}else if( mx >= this.centerPos[0] + this.centerSize[0] && mx <= this.rightPos[0] + this.backSize[0] && my >= this.rightPos[1] && my <= this.rightPos[1]+this.backSize[1] && this.position == 1){
+			//this is a right image and be selected
+			a[0]=1;a[1]=1;
+			//System.out.println("right clicked");
+		}else{
+			a[0]=-2;a[1]=0;
+			//System.out.println("nothing");
+		}
+		return a;
+	}
 	
 	/**
 	 * Constructor: initialized with an image from file

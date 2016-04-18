@@ -1,0 +1,184 @@
+package lab09;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import javax.swing.*;
+import java.util.*;
+
+/**
+ * Tutorial 9 example and exercise
+ * @author cfchen
+ *
+ */
+public class Exercise9 implements MouseListener{
+	
+	ArrayList<MyImage> images = new ArrayList<MyImage>();
+	MyImage background;
+	int imageNum=6;
+	int centerIdx = 0;
+	JFrame frame;
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Exercise9 e9 = new Exercise9();
+		e9.go();
+	}
+	
+	void go(){
+		// make a window 
+		frame = new JFrame();
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		//create a new image
+		background = new MyImage();
+		background.readImage("images/background.jpg");
+		
+		//read album images
+		for(int i=0;i<imageNum;i++){
+			MyImage t=new MyImage("images/album"+i+".jpg");
+			images.add(t);
+		}
+		
+		//initialize the position of three images to be drawn 
+		images.get((centerIdx-1+imageNum)%imageNum).setPos(-1);//the previous image goes to the left
+		images.get((centerIdx+1)%imageNum).setPos(1);//next image goes to right 
+		
+		//make your own panel
+		MyDrawPanel drawPanel = new MyDrawPanel();//need to over ride the paint component method in MyDrawPanel class
+		frame.add(drawPanel);
+		frame.addMouseListener(this);//add the mouse listener to the frame or the panel ?
+		frame.setSize(600, 500);
+		frame.setVisible(true);
+		
+		
+    	while(true){
+        	int speed = 10;
+        	
+        	// change current center index and calculate the indexes of left and right images
+			centerIdx = centerIdx + imageNum - 1;//previous image 
+			centerIdx %= imageNum;
+			int left = (centerIdx-1+imageNum)%imageNum;
+			int right = (centerIdx+1)%imageNum;		
+			//images.get(left).addMouseListener(this);//register the listener with the frame 
+			
+			if( images.get(left).getSelectedStatus() == true){//the left image is selected
+				
+				images.get(left).setPos(-1);	//left images doesn't need to move, so directly set its position
+				//move center and right image
+				for(int i=0;i<speed-1;i++){
+					images.get(centerIdx).moveRight(speed);
+					images.get(right).moveRight(speed);
+					frame.repaint();
+					try {
+						Thread.sleep(8);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				
+				//set the final position of left and right image
+				images.get(centerIdx).setPos(0);
+				images.get(right).setPos(1);
+				frame.repaint();
+				
+			}else if( images.get(right).getSelectedStatus() == true){//the image on the right is selected
+				
+				images.get(right).setPos(1);	//left images doesn't need to move, so directly set its position
+				//move center and right image
+				for(int i=0;i<speed-1;i++){
+					images.get(centerIdx).moveLeft(speed);
+					images.get(right).moveLeft(speed);
+					frame.repaint();
+					try {
+						Thread.sleep(8);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				
+				//set the final position of left and right image
+				images.get(centerIdx).setPos(-1);
+				images.get(left).setPos(-1);
+				frame.repaint();
+				
+			}else if(images.get(centerIdx).getSelectedStatus() == true){//image in the center is selected
+				frame.repaint();
+			}else{//nothing is selected 
+				System.out.println("nothing is selected");
+			}
+			
+			
+			
+			//introduce delay to the infinite loop 
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				//sleep fail ?
+				e1.printStackTrace();
+			}
+    	}	
+	}
+	
+	class MyDrawPanel extends JPanel{
+		public void paintComponent(Graphics g){
+			//calculate three image indexes, and show background and three images.
+			int lb = (centerIdx-1+imageNum)%imageNum;
+			int rb = (centerIdx+1)%imageNum;
+			g.drawImage(background.getContent(), 0, 0, this);
+			g.drawImage(images.get(lb).getContent(), images.get(lb).getPos()[0], images.get(lb).getPos()[1], this);
+			g.drawImage(images.get(rb).getContent(), images.get(rb).getPos()[0], images.get(rb).getPos()[1], this);
+			g.drawImage(images.get(centerIdx).getContent(), images.get(centerIdx).getPos()[0], images.get(centerIdx).getPos()[1], this);
+		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println("mouse clicked the area");
+		System.out.println("position : "+e.getX() + " , "+e.getY());
+		int x = e.getX(); int y = e.getY(); int l = (centerIdx-1+imageNum)%imageNum; int r = (centerIdx+1)%imageNum;
+		
+		if( MouseX >= this.leftPos[0] && MouseX <= this.centerPos[0] && MouseY >= this.leftPos[1] && MouseY <= (this.leftPos[1]+this.backSize[1]) ){
+			//you clicked the left image
+			this.selected=true;
+			System.out.println("left image is selected");
+	
+	
+		if( MouseX >= this.centerPos[0] && MouseX <= this.centerPos[0] + this.centerSize[0] && MouseY >= this.centerPos[1] && MouseY <= this.centerPos[1]+this.centerSize[1]){
+			this.selected=true;
+			System.out.println("center image is selected");
+		
+		if( MouseX <= this.rightPos[0]+this.backSize[0] && MouseX >= this.centerPos[0]+this.centerSize[0] && MouseY >= this.rightPos[1] && MouseY <= this.rightPos[1]+this.backSize[1]){
+			//you clicked the left image
+			this.selected=true;
+			System.out.println("right image is selected");
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		//System.out.println("mouse press the area");
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		//System.out.println("mouse release");
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		//System.out.println("mouse enter the area");
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println("mouse exit the area");
+	}
+}

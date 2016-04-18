@@ -1,0 +1,236 @@
+package lab09;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.*;
+
+/**
+ * This is a class for image operation
+ * @author cfchen
+ *
+ */
+public class MyImage{
+	private BufferedImage origin = null;//original image read in from outside 
+	private BufferedImage image = null;// this object reference can be used to create animation 
+	
+	private int[] centerSize = {400, 300};//image in the middle is bigger
+	private int[] backSize = {300, 260};//image on both side is smaller
+	private int[] centerPos = {100, 100};//position on the screen 
+	private int[] leftPos = {20, 120};
+	private int[] rightPos = {280, 120};
+	private int[] showPos = new int[2];//what is this ?
+	
+	private int position = 0;//the position of the image ?
+	private float backAlpha = 0.5f;//alpha value for the image on the pack 
+	private float alpha = 1.0f;//alpha value for the image on the front 
+	private boolean selected;
+	
+	public void getSelectedStatus(int MouseX, int MouseY){
+		
+		if(this.position == -1){//check left image is clicked ?
+			if( MouseX >= this.leftPos[0] && MouseX <= this.centerPos[0] && MouseY >= this.leftPos[1] && MouseY <= (this.leftPos[1]+this.backSize[1]) ){
+				//you clicked the left image
+				this.selected=true;
+			}
+		}else if(this.position == 0){//check middle image is clicked?
+			if( MouseX >= this.centerPos[0] && MouseX <= this.centerPos[0] + this.centerSize[0] && MouseY >= this.centerPos[1] && MouseY <= this.centerPos[1]+this.centerSize[1]){
+				this.selected=true;
+			}
+		}else if( this.position == 1){//check right image is clicked?
+			if( MouseX <= this.rightPos[0]+this.backSize[0] && MouseX >= this.centerPos[0]+this.centerSize[0] && MouseY >= this.rightPos[1] && MouseY <= this.rightPos[1]+this.backSize[1]){
+				//you clicked the left image
+				this.selected=true;
+			}
+		}else{
+			System.out.println("error position, psition not setted yet");
+
+		}
+		
+	}
+	
+	public void resetSelected(){
+		this.selected=false;
+	}
+	
+
+	/**
+	 * Constructor: initialized with an image from file
+	 * @param filepath image full path
+	 */
+	MyImage(String filepath){
+		readImage(filepath);
+		image = origin;//what does this mean ?
+		setPos(0);//set in the central position ? 
+	}
+	
+	/**
+	 * No parameter constructor
+	 */
+	MyImage(){ }
+	
+	/**
+	 * if not initialized with constructor, this method can be used to read image
+	 * @param filepath image full path
+	 */
+	public void readImage(String filepath){
+		try {
+			origin = ImageIO.read(new File(filepath));//origin reference is no longer referencing to null 
+			image = origin;//both references point the same obejct instance
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();//print the debug message
+		}
+	}
+	
+	/**
+	 * move the image to right by one step
+	 * right image can't be move to further right
+	 * @param speed control the length of one step
+	 */
+	public void moveRight(int speed){
+		float stepW = (float)(centerSize[0] - backSize[0]) / speed;
+		float stepH = (float)(centerSize[1] - backSize[1]) / speed;
+		float AlphaStep = (float)(0.9-backAlpha) / speed;
+		float stepX1 = (float)(centerPos[0] - leftPos[0]) / speed;
+		float stepX2 = (float)(rightPos[0] - centerPos[0]) / speed;
+		if(position==-1){	//move from left to center
+			
+			resizeImage((int)(getWidth()+stepW), (int)(getHeight()+stepH));
+			setAlpha(alpha + AlphaStep);
+			setPos((int)(showPos[0]+stepX1), (int)(showPos[1]-stepH/2));
+		}
+		else if(position==0){	//move from center to right
+			
+			resizeImage((int)(getWidth()-stepW), (int)(getHeight()-stepH));
+			setAlpha(alpha - AlphaStep);
+			setPos((int)(showPos[0]+stepX2), (int)(showPos[1]+stepH/2));
+		}
+		else{
+			System.out.println("Already in the right, can't move right");
+		}
+	}
+	
+	/**
+	 * move the image to left by one step
+	 * left image can't be move to further left
+	 * @param speed control the length of one step
+	 */
+	public void moveLeft(int speed){
+		float stepW = (float)(centerSize[0] - backSize[0]) / speed;
+		float stepH = (float)(centerSize[1] - backSize[1]) / speed;
+		float AlphaStep = (float)(0.9-backAlpha) / speed;
+		if(position==1){	//move from right to center
+			float stepX = (float)(rightPos[0] - centerPos[0]) / speed;
+			resizeImage((int)(getWidth()+stepW), (int)(getHeight()+stepH));
+			setAlpha(alpha + AlphaStep);
+			setPos((int)(showPos[0]-stepX), (int)(showPos[1]-stepH/2));
+		}
+		else if(position==0){	//move from center to left
+			float stepX = (float)(centerPos[0] - leftPos[0]) / speed;
+			resizeImage((int)(getWidth()-stepW), (int)(getHeight()-stepH));
+			setAlpha(alpha - AlphaStep);
+			setPos((int)(showPos[0]-stepX), (int)(showPos[1]+stepH/2));
+		}
+		else{//position == 2 ??
+			System.out.println("Already in the left, can't move left");
+		}
+	}
+	
+	/**
+	 * set the draw position of image
+	 * @param x left top x coordinate
+	 * @param y left top y coordinate
+	 */
+	private void setPos(int x, int y){
+		showPos[0] = x;
+		showPos[1] = y;
+	}
+	
+	/**
+	 * set the position of the image, when initialize it
+	 * @param pos -1: left; 0: center; 1: right
+	 */
+	public void setPos(int pos){
+		if(pos<0){
+			position = -1;
+			showPos[0] = leftPos[0];//x coordinate
+			showPos[1] = leftPos[1];//y coordinate
+			resizeImage(backSize[0], backSize[1]);
+			setAlpha(backAlpha);
+		}
+		else if(pos==0){
+			position = 0;
+			showPos[0] = centerPos[0];
+			showPos[1] = centerPos[1];
+			resizeImage(centerSize[0], centerSize[1]);
+		}
+		else{
+			position = 1;
+			showPos[0] = rightPos[0];
+			showPos[1] = rightPos[1];
+			resizeImage(backSize[0], backSize[1]);
+			setAlpha(backAlpha);
+		}
+	}
+	
+	/**
+	 * get the draw position
+	 * @return (x,y) of draw position
+	 */
+	public int[] getPos(){
+		return showPos;
+	}
+	
+	/**
+	 * get the width of the image
+	 * @return width of the image
+	 */
+	public int getWidth(){
+		return image.getWidth();
+	}
+	
+	/**
+	 * get the height of the image
+	 * @return height of the image
+	 */
+	public int getHeight(){
+		return image.getHeight();
+	}
+	
+	/**
+	 * get the image handle
+	 * @return image handle
+	 */
+	public BufferedImage getContent(){
+		return image;//return the image reference 
+	}
+	
+	/**
+	 * set the alpha value of the image
+	 * @param opacity float 0~1. image with 0 alpha can't be seen
+	 */
+	public void setAlpha(float opacity){
+		BufferedImage alphaBI = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+    	Graphics2D g = alphaBI.createGraphics();
+    	g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
+    	g.drawImage(image, 0, 0, getWidth(),getHeight(), null); 
+    	g.dispose();
+    	image = alphaBI;
+    	alpha = opacity;
+	}
+	
+	/**
+	 * resize the image with new size
+	 * @param newW new width
+	 * @param newH new height
+	 */
+	public void resizeImage(int newW, int newH)
+	{
+		Image tmp = origin.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+	    image = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
+	    Graphics2D g2d = image.createGraphics();
+	    g2d.setComposite(AlphaComposite.Src);
+	    g2d.drawImage(tmp, 0, 0, newW, newH, null);
+	    g2d.dispose();//what is this ? // deletion ??
+	}
+}
