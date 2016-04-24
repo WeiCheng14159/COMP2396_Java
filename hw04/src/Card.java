@@ -5,13 +5,11 @@
  *
  */
 public class Card implements Comparable<Card> {
-	private static final char[] SUITS = { '\u2666', '\u2663', '\u2665',
-			'\u2660' }; // {Diamond,
-						// Club,
-						// Heart,
-						// Spade}
-	private static final char[] RANKS = { 'A', '2', '3', '4', '5', '6', '7',
-			'8', '9', '0', 'J', 'Q', 'K' };
+	private static final char[] SUITS = { '\u2666', '\u2663', '\u2665', '\u2660' }; // {Diamond,
+																					// Club,
+																					// Heart,
+																					// Spade}
+	private static final char[] RANKS = { 'A', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'J', 'Q', 'K' };
 
 	protected final int suit; // 0 - 3
 	protected final int rank; // 0 - 12
@@ -93,11 +91,11 @@ public class Card implements Comparable<Card> {
 	 * 
 	 * @param card
 	 *            the reference object with which to compare
-	 * @return true if this card has the same rank and suit as the specified card; false otherwise
+	 * @return true if this card has the same rank and suit as the specified
+	 *         card; false otherwise
 	 */
 	public boolean equals(Object card) {
-		return (this.rank == ((Card) card).getRank() && suit == ((Card) card)
-				.getSuit());
+		return (this.rank == ((Card) card).getRank() && suit == ((Card) card).getSuit());
 	}
 
 	/**

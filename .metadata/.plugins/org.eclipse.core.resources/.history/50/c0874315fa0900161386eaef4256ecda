@@ -1,0 +1,203 @@
+import java.util.ArrayList;
+import javax.*;
+
+public class BigTwo implements CardGame{
+	
+	private int numOfPlayers;
+	private Deck deck;
+	private ArrayList<CardGamePlayer> playerList;
+	private ArrayList<Hand> handsOnTable;
+	private int currentIdx;
+	
+	private boolean firstPlay;
+	private Hand currentPlayerHand;
+	private int howManyPeoplePass=0;
+	private boolean nextPlayer=false;
+	private Hand prevPlayerHand=null;
+	
+	@Override
+	public int getNumOfPlayers() {
+		// TODO Auto-generated method stub
+		return playerList.size();
+	}
+
+	@Override
+	public Deck getDeck() {
+		// TODO Auto-generated method stub
+		return deck;
+	}
+
+	@Override
+	public ArrayList<CardGamePlayer> getPlayerList() {
+		// TODO Auto-generated method stub
+		return playerList;
+	}
+
+	@Override
+	public ArrayList<Hand> getHandsOnTable() {
+		// TODO Auto-generated method stub
+		return handsOnTable;
+	}
+
+	@Override
+	public int getCurrentIdx() {
+		// TODO Auto-generated method stub
+		return currentIdx;
+	}
+	
+	/**
+	 * start a BigTwo card game
+	 */
+	@Override
+	public void start() {
+
+		//searching who has diamond three, player with diamond three should play the first hand
+		for( int i = 0 ; i < playerList.size();i++){
+			if(playerList.get(i).getCardsInHand().contains(new BigTwoCard(0,2))){
+				currentIdx = i;
+				break;
+			}
+		}
+		
+		//game start
+		while(!endOfGame()){
+			
+			BigTwoTable t = new BigTwoTable(this);
+			t.setActivePlayer(currentIdx);
+			t.repaint();
+			
+			if( t.isPass()){
+			t.setPass(false);	
+				//pass mechanism 
+			}else if( t.isPlay()){
+				t.setPlay(false);
+				checkMove(t.getSelected());
+			}else{
+				
+			}
+		}
+		
+		//game ends, and show the game statistics 
+		System.out.println("\nGame ends");
+		for ( CardGamePlayer p : playerList ){
+			System.out.println(p.getName()+" has "+p.getNumOfCards()+" of cards in hand. ");
+		}
+	}
+
+	@Override
+	public void checkMove(int[] cardIdx) {//don't need to consider player pass the turn
+		CardList userWantToPlay = new CardList();
+		if( cardIdx.length == 0){
+			System.out.println("nothing to play");
+		}else{
+			for( int i = 0 ; i < cardIdx.length ; i++){
+				userWantToPlay.addCard(this.playerList.get(currentIdx).getCardsInHand().getCard(cardIdx[i]));
+			}//what cards do user want to play ?
+		}
+		
+		CardGamePlayer currentPlayer = playerList.get(currentIdx);
+		Card smallThree = new BigTwoCard(0,2); 	
+		
+		if(userWantToPlay.size()!=0){//user play hands
+			System.out.println("user play empty");
+			this.currentPlayerHand = new Hand(currentPlayer,userWantToPlay);
+			if(currentPlayerHand.isValid()){//hand is valid
+				if(firstPlay){//first hand in the game, player should play diamond three
+					if(userWantToPlay.contains(smallThree) ){
+						firstPlay = false;
+						nextPlayer = true;
+						currentPlayer.removeCards(userWantToPlay);
+						handsOnTable.add(currentPlayerHand);
+						prevPlayerHand = currentPlayerHand;
+					}else{
+						System.out.println("Not a legal move!!!");
+						System.out.println("Player must play \u26663 in the first round.");
+					}
+				}else{//not first play, normal round
+					if(howManyPeoplePass >= 3){//you can play any hand, you have the largest hand
+						howManyPeoplePass=0;
+						nextPlayer = true;
+						currentPlayer.removeCards(userWantToPlay);
+						handsOnTable.add(currentPlayerHand);
+						prevPlayerHand = currentPlayerHand;
+					}else{//your hand must beat someone
+						if(currentPlayerHand.beats(prevPlayerHand)){//you beat it !
+							howManyPeoplePass=0;
+							nextPlayer = true;
+							currentPlayer.removeCards(userWantToPlay);
+							handsOnTable.add(currentPlayerHand);
+							prevPlayerHand = currentPlayerHand;
+						}else{//your hand cannot beat someone
+							System.out.println("Not a legal move!!!");
+						}
+					}
+				}
+				
+			}else{//this is not a valid hand in this game
+				System.out.println("Not a legal move!!!");
+			}
+		}else{//user play a "nothing" hand
+			if(firstPlay){//you must play the first hand in the first round
+				System.out.println("Not a legal move!!!");
+			}else{//you pass this round
+				System.out.println("{pass}");
+				nextPlayer = true;
+				howManyPeoplePass++;
+			}
+		}
+	}
+
+	@Override
+	public boolean endOfGame() {
+		if(playerList.get(0).getNumOfCards() == 0 || playerList.get(1).getNumOfCards() == 0 || playerList.get(2).getNumOfCards() == 0 || playerList.get(3).getNumOfCards() == 0 ){
+			return true;//game ended
+		}else{//game continues
+			return false;
+		}
+	}
+	
+public BigTwo(){
+		
+		//initializing variables, there will be 4 players and 52 cards in a BigTwo game
+		numOfPlayers=4;
+		playerList = new ArrayList<CardGamePlayer>();
+		handsOnTable = new ArrayList<Hand>();
+		deck = new BigTwoDeck();
+		deck.initialize();
+		
+		//add card game players into the playerList and randomly distributes 13 cards for each player
+		for ( int i = 0 ; i < 4 ; i ++){
+			CardGamePlayer player = new CardGamePlayer();
+			for( int j = 0 ; j < 13 ; j++){
+				player.addCard(deck.getCard(i*13+j));
+			}
+			player.sortCardsInHand();
+			playerList.add(player);
+		}
+		
+		//before everything begin make sure everything is right
+		/*For debug use**************************************************/
+		System.out.println("Num of player: "+numOfPlayers);
+		for( CardGamePlayer p : playerList){
+			System.out.println("name: "+p.getName()+"score: "+p.getScore()+"num hand: "+p.getNumOfCards()+" list: ");
+			p.getCardsInHand().print();
+		}
+		System.out.println("current id : "+currentIdx);
+		/*For debug use**************************************************/
+		firstPlay = true;
+		currentPlayerHand=null;
+		howManyPeoplePass=0;
+		nextPlayer=false;
+		prevPlayerHand=null;
+	}
+	
+    /**
+     *  create a BigTwo game test the game
+     * @param input argument
+     */
+	/*public static void main(String[] args) {
+		BigTwo firstRound = new BigTwo();
+		//firstRound.start();
+	}*/
+	
+}

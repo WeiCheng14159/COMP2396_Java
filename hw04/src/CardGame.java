@@ -30,12 +30,14 @@ public interface CardGame {
 
 	/**
 	 * Returns the list of hands played on the table.
+	 * 
 	 * @return the list of hands played on the table
 	 */
 	public ArrayList<Hand> getHandsOnTable();
 
 	/**
 	 * Returns the index of the current player.
+	 * 
 	 * @return the index of the current player
 	 */
 	public int getCurrentIdx();
@@ -47,12 +49,16 @@ public interface CardGame {
 
 	/**
 	 * Checks the move made by the current player.
-	 * @param cardIdx the list of the indices of the cards selected by the current player
+	 * 
+	 * @param cardIdx
+	 *            the list of the indices of the cards selected by the current
+	 *            player
 	 */
 	public void checkMove(int[] cardIdx);
 
 	/**
 	 * Checks for end of game.
+	 * 
 	 * @return true if the game ends; false otherwise
 	 */
 	public boolean endOfGame();
