@@ -1,4 +1,3 @@
-package tuto2exercise;
 
 /**
  * Main method, which receives the command line parameter(ID of a person) 

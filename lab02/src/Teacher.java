@@ -1,4 +1,3 @@
-package tuto2exercise;
 
 /**
  *  create a Teacher object that inherits a Person object

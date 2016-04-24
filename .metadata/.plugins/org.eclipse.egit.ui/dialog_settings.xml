@@ -2,17 +2,19 @@
 <section name="Workbench">
 	<item value="true" key="CommitDialog.showUntracked"/>
 	<list key="CommitDialog.authorValues">
+		<item value="m2 4790k &lt;u3512488@hku.hk&gt;"/>
 		<item value="[cheng wei] &lt;[michael1996623@gmail.com]&gt;"/>
 	</list>
 	<list key="CommitDialog.committerValues">
+		<item value="m2 4790k &lt;u3512488@hku.hk&gt;"/>
 		<item value="[cheng wei] &lt;[michael1996623@gmail.com]&gt;"/>
 	</list>
 	<section name="org.eclipse.egit.ui.internal.push.PushResultDialog.dialogBounds">
-		<item value="650" key="DIALOG_WIDTH"/>
-		<item value="1|.SF NS Text|11.0|0|COCOA|1|.SFNSText-Regular" key="DIALOG_FONT_NAME"/>
-		<item value="440" key="DIALOG_HEIGHT"/>
-		<item value="379" key="DIALOG_X_ORIGIN"/>
-		<item value="254" key="DIALOG_Y_ORIGIN"/>
+		<item value="666" key="DIALOG_WIDTH"/>
+		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
+		<item value="458" key="DIALOG_HEIGHT"/>
+		<item value="476" key="DIALOG_X_ORIGIN"/>
+		<item value="253" key="DIALOG_Y_ORIGIN"/>
 		<list key="sashWeights">
 			<item value="600"/>
 			<item value="400"/>
@@ -23,9 +25,9 @@
 		<item value="324" key="DIALOG_Y_ORIGIN"/>
 	</section>
 	<section name="org.eclipse.egit.ui.COMMIT_DIALOG_SECTION">
-		<item value="626" key="DIALOG_WIDTH"/>
-		<item value="1|.SF NS Text|11.0|0|COCOA|1|.SFNSText-Regular" key="DIALOG_FONT_NAME"/>
-		<item value="623" key="DIALOG_HEIGHT"/>
+		<item value="643" key="DIALOG_WIDTH"/>
+		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
+		<item value="641" key="DIALOG_HEIGHT"/>
 		<item value="407" key="DIALOG_X_ORIGIN"/>
 		<item value="35" key="DIALOG_Y_ORIGIN"/>
 	</section>
