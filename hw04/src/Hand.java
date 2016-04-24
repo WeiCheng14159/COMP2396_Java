@@ -149,8 +149,8 @@ public class Hand extends CardList {
 		for (int i = 0; i < 8; i++) {
 			if (validHandList[i].isValid()) {
 				valid = i;
-				System.out.print("{" + validHandList[i].getType() + "}  ");
-				print();
+				//System.out.print("{" + validHandList[i].getType() + "}  ");
+				//print();
 				break;
 			}
 		}

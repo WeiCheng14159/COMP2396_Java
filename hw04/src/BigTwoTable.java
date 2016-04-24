@@ -32,6 +32,7 @@ public class BigTwoTable implements CardGameTable {
 	 * @param game The parameter game is a reference to a card game associates with this table
 	 */
 	public BigTwoTable(CardGame game) {
+		
 		// game
 		this.game = game;
 		// active player
@@ -43,7 +44,7 @@ public class BigTwoTable implements CardGameTable {
 		this.selected = new boolean[game.getPlayerList().get(activePlayer).getNumOfCards()];
 		// button status
 		this.pass = false;
-		this.pass = false;
+		this.play = false;
 
 		// store the head icons
 		avatars = new Image[4];
@@ -308,7 +309,7 @@ public class BigTwoTable implements CardGameTable {
 	@Override
 	public void print(String msg) {
 		// TODO Auto-generated method stub
-		textArea = new JTextArea(msg);
+		this.textArea.append(msg);
 	}
 
 	/**
@@ -317,7 +318,7 @@ public class BigTwoTable implements CardGameTable {
 	@Override
 	public void println(String msg) {
 		// TODO Auto-generated method stub
-		textArea = new JTextArea(msg + "\n");
+		this.textArea.append(msg+'\n');
 	}
 
 	/**
@@ -326,7 +327,7 @@ public class BigTwoTable implements CardGameTable {
 	@Override
 	public void clearTextArea() {
 		// TODO Auto-generated method stub
-		textArea = new JTextArea("");
+		this.textArea.setText("");
 	}
 
 	/** 
