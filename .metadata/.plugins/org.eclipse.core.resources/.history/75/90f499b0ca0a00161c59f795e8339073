@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 /**
- * class definition 
+ * BigTwo class implementation  
  * @author m2-4790k
- *
+ * 
  */
 public class BigTwo implements CardGame {
 
@@ -16,7 +16,7 @@ public class BigTwo implements CardGame {
 	private Hand currentPlayerHand;
 	private int howManyPeoplePass = 0;
 	private Hand prevPlayerHand = null;
-
+	private BigTwoTable t;
 	/**
 	 * return how many players are playing this game
 	 */
@@ -69,18 +69,16 @@ public class BigTwo implements CardGame {
 	public void start() {
 
 		// searching who has diamond three, player with diamond three should
-		// play the first hand
 		for (int i = 0; i < playerList.size(); i++) {
 			if (playerList.get(i).getCardsInHand().contains(new BigTwoCard(0, 2))) {
 				currentIdx = i;
 				break;
 			}
 		}
-
-		BigTwoTable t = new BigTwoTable(this);
+		t = new BigTwoTable(this);
 		t.setActivePlayer(currentIdx);
 		t.repaint();
-
+		t.clearTextArea();
 		// game start
 		while (!endOfGame()) {
 
@@ -89,7 +87,8 @@ public class BigTwo implements CardGame {
 			if (t.isPass() || t.isPlay()) {
 								
 				if (t.isPass()) {
-					System.out.println("Player "+this.currentIdx+" pass");
+					//System.out.println("Player "+this.currentIdx+" pass");
+					t.println("Player "+this.currentIdx+" pass");
 					t.setPass(false);
 					howManyPeoplePass++;
 					currentIdx++;
@@ -97,7 +96,8 @@ public class BigTwo implements CardGame {
 					t.resetSelected();
 					// pass mechanism
 				} else if (t.isPlay() ) {
-					System.out.println("Player "+this.currentIdx + " play");
+					//System.out.println("Player "+this.currentIdx + " play");
+					t.println("Player "+this.currentIdx + " play");
 					t.setPlay(false);
 					checkMove(t.getSelected());
 					t.resetSelected();
@@ -108,7 +108,8 @@ public class BigTwo implements CardGame {
 		// game ends, and show the game statistics
 		System.out.println("\nGame ends");
 		for (CardGamePlayer p : playerList) {
-			System.out.println(p.getName() + " has " + p.getNumOfCards() + " of cards in hand. ");
+			//System.out.println(p.getName() + " has " + p.getNumOfCards() + " of cards in hand. ");
+			t.println(p.getName() + " has " + p.getNumOfCards() + " of cards in hand. ");
 		}
 	}
 
@@ -120,7 +121,8 @@ public class BigTwo implements CardGame {
 	public void checkMove(int[] cardIdx) {// don't need to consider player pass the game
 		CardList userWantToPlay = new CardList();
 		if (cardIdx.length == 0) {
-			System.out.println("player play nothing");
+			//System.out.println("player play nothing error");
+			t.println("player play nothing error");
 		} else {
 			for (int i = 0; i < cardIdx.length; i++) {
 				userWantToPlay.addCard(this.playerList.get(currentIdx).getCardsInHand().getCard(cardIdx[i]));
@@ -132,6 +134,7 @@ public class BigTwo implements CardGame {
 
 		this.currentPlayerHand = new Hand(currentPlayer, userWantToPlay);
 		if (currentPlayerHand.isValid()) {// hand is valid
+			t.println(currentPlayerHand.toString());
 			if (firstPlay) {// first hand in the game, player should play diamond three in the first round
 				if (userWantToPlay.contains(smallThree)) {//user follows the rule
 					firstPlay = false;
@@ -141,8 +144,10 @@ public class BigTwo implements CardGame {
 					currentIdx++;
 					currentIdx = currentIdx % this.getNumOfPlayers();
 				} else {//not a legal move
-					System.out.println("Not a legal move!!!");
-					System.out.println("Player must play \u26663 in the first round.");
+					t.println("Not a legal move!!!");
+					t.println("Player must play \u26663 in the first round.");
+					//System.out.println("Not a legal move!!!");
+					//System.out.println("Player must play \u26663 in the first round.");
 				}
 			} else {// not first play, normal round
 				if (howManyPeoplePass >= 3) {// you can play any hand, you have the biggest hand
@@ -161,12 +166,14 @@ public class BigTwo implements CardGame {
 						currentIdx++;
 						currentIdx = currentIdx % this.getNumOfPlayers();
 					} else {// your hand cannot beat someone
-						System.out.println("your card is valid but cannot beat the cards on the table");
+						t.println("your card is valid but cannot beat the cards on the table");
+						//System.out.println("your card is valid but cannot beat the cards on the table");
 					}
 				}
 			}
 		} else {// this is not a valid hand in this game
-			System.out.println("Not a valid hand");
+			//System.out.println("Not a valid hand");
+			t.println("Not a valid hand");
 		}
 	}
 
@@ -195,7 +202,7 @@ public class BigTwo implements CardGame {
 		handsOnTable = new ArrayList<Hand>();
 		deck = new BigTwoDeck();
 		deck.initialize();
-
+		
 		// add card game players into the playerList and randomly distributes 13
 		// cards for each player
 		for (int i = 0; i < 4; i++) {
