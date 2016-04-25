@@ -18,7 +18,7 @@ public class SimpleChatClient {
 	
 	public void go() {
 		try {
-			sock = new Socket("127.0.0.1", 5000);
+			sock = new Socket("127.0.0.1", 6111);
 			InputStreamReader streamReader = new InputStreamReader(sock.getInputStream());
 			reader = new BufferedReader(streamReader);
 			writer = new PrintWriter(sock.getOutputStream());
@@ -39,12 +39,19 @@ public class SimpleChatClient {
 		qScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		outgoing = new JTextField(20);
 		JButton sendButton = new JButton("Send");
+		JButton clearButton = new JButton("Clear");
+		JButton exportButton = new JButton("Export");
 		sendButton.addActionListener(new SendButtonListener());
+		clearButton.addActionListener(new ClearButtonListener());
+		exportButton.addActionListener(new ExportButtonListener());
+		
 		
 		JPanel panel = new JPanel();
 		panel.add(qScroller);
 		panel.add(outgoing);
 		panel.add(sendButton);
+		panel.add(clearButton);
+		panel.add(exportButton);
 		frame.add(panel, BorderLayout.CENTER);
 		frame.setSize(640,  350);
 		frame.setVisible(true);
@@ -64,6 +71,25 @@ public class SimpleChatClient {
 			}
 			outgoing.setText("");
 			outgoing.requestFocus();
+		}
+	}
+	public class ClearButtonListener implements ActionListener{
+		public void actionPerformed(ActionEvent event){
+			incoming.setText("");
+		}
+	}
+	public class ExportButtonListener implements ActionListener{
+		public void actionPerformed(ActionEvent event){
+			String chat_history = incoming.getText();
+			File file = new File("output.txt");
+			try{
+				FileWriter w  = new FileWriter(file);
+				w.write(chat_history);
+				w.flush();
+				w.close();
+			}catch( IOException e){
+				e.printStackTrace();
+			}
 		}
 	}
 	
