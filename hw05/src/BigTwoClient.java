@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -172,11 +173,16 @@ public class BigTwoClient implements CardGame, NetworkGame{
 	@Override
 	public void makeConnection() {
 		// TODO Auto-generated method stub
-		this.oos = sock.getob();
-		sock = new Socket(this.serverIP, this.serverPort);
-		InputStreamReader streamReader = new InputStreamReader(sock.getInputStream());
-		BufferedReader reader = new BufferedReader(streamReader);
-		writer = new PrintWriter(sock.getOutputStream());
+		try {
+			sock = new Socket("127.0.0.1", 6111);
+			InputStreamReader streamReader = new InputStreamReader(sock.getInputStream());
+			BufferedReader reader = new BufferedReader(streamReader);
+			this.oos = new ObjectOutputStream(sock.getOutputStream());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		//create a thread for receiving message 
 	}
 
 	@Override
