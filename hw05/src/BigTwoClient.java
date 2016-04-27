@@ -1,10 +1,13 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
 
 public class BigTwoClient implements CardGame, NetworkGame{
 
@@ -20,8 +23,12 @@ public class BigTwoClient implements CardGame, NetworkGame{
 	private int currentIdx;
 	private BigTwoTable table;
 	
+	private String userName;
+	
+	
 	public BigTwoClient(){
-		//create a list of palyers
+		
+		//create a list of players
 		this.playerList = new ArrayList<CardGamePlayer>();
 		this.playerList.add(new CardGamePlayer());
 		this.playerList.add(new CardGamePlayer());
@@ -29,7 +36,10 @@ public class BigTwoClient implements CardGame, NetworkGame{
 		this.playerList.add(new CardGamePlayer());
 		
 		//create a big two table
-		this.table  = new BigTwoTable(new BigTwo());
+		this.table  = new BigTwoTable(this);	
+		
+		this.userName = JOptionPane.showInputDialog("Please input your name:");
+		this.makeConnection();
 	}
 	
 	@Override
@@ -66,10 +76,13 @@ public class BigTwoClient implements CardGame, NetworkGame{
 	public void start(Deck deck) {
 		// TODO Auto-generated method stub
 		
-		numOfPlayers = 4;
+		//prompt the user to input the name
+		
+		this.numOfPlayers = 4;
 		this.handsOnTable = new ArrayList<Hand>();
 		deck = new BigTwoDeck();
 		deck.initialize();
+		this.deck = deck;
 		
 		// add card game players into the playerList and randomly distributes 13
 		// cards for each player
@@ -79,7 +92,7 @@ public class BigTwoClient implements CardGame, NetworkGame{
 				player.addCard(deck.getCard(i * 13 + j));
 			}
 			player.sortCardsInHand();
-			playerList.add(player);
+			this.playerList.add(player);
 		}
 		
 		
@@ -92,14 +105,13 @@ public class BigTwoClient implements CardGame, NetworkGame{
 		
 		this.table.setActivePlayer(this.playerID);
 		this.table.setActiveSelection(this.playerID);
-		
 	}
 
 	@Override
 	public void makeMove(int playerID, int[] cardIdx) {
 		// TODO Auto-generated method stub
 		
-		CardGameMessage c = new CardGameMessage(CardGameMessage.MOVE, playerID, cardIdx);
+		CardGameMessage c = new CardGameMessage(CardGameMessage.MOVE, -1, cardIdx);
 		this.sendMessage(c);
 		
 	}
@@ -113,13 +125,13 @@ public class BigTwoClient implements CardGame, NetworkGame{
 	@Override
 	public boolean isPlaying() {
 		// TODO Auto-generated method stub
-		return this.table
+		//return true;
 	}
 
 	@Override
 	public boolean endOfGame() {
 		// TODO Auto-generated method stub
-		return false;
+		//return false;
 	}
 
 	@Override
@@ -174,21 +186,57 @@ public class BigTwoClient implements CardGame, NetworkGame{
 	public void makeConnection() {
 		// TODO Auto-generated method stub
 		try {
-			sock = new Socket("127.0.0.1", 6111);
-			InputStreamReader streamReader = new InputStreamReader(sock.getInputStream());
-			BufferedReader reader = new BufferedReader(streamReader);
+			sock = new Socket("127.0.0.1", 2396);
 			this.oos = new ObjectOutputStream(sock.getOutputStream());
+			Thread receiveData = new Thread(new ServerHandler());
+			receiveData.start();//make a thread running for receiving data
+			
+			//initialization message
+			this.oos.writeObject( new CardGameMessage(CardGameMessage.JOIN, -1,this.userName) );
+			this.oos.writeObject( new CardGameMessage(CardGameMessage.READY, -1, null) );
+			
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		
 		//create a thread for receiving message 
 	}
-
 	@Override
 	public void parseMessage(GameMessage message) {
 		// TODO Auto-generated method stub
-		
+		switch(message.getType()){
+		case CardGameMessage.PLAYER_LIST:
+			// set player id of local user and update the name in the playerlist
+			this.playerID = message.getPlayerID();
+			String [] arr  = (String []) message.getData();
+			//how do i change the player list ?
+			for( int i = 0 ; i< arr.length ; i++){
+				System.out.println("setting player name "+arr[i]);
+				this.playerList.get(i).setName(arr[i]);
+			}
+			//update the lcoal player list with the server player list
+			break;
+		case CardGameMessage.JOIN:
+			// marks the specified player as ready for a new game
+			this.playerList.get(message.getPlayerID()).setName( (String) message.getData() );
+			break;
+		case CardGameMessage.FULL:
+			this.table.println("server is full cannot join the game");
+			break;
+		case CardGameMessage.QUIT:
+			//this.playerList()
+			break;
+		case CardGameMessage.READY:
+			this.table.println(message.getPlayerID()+" is ready !");
+			break;
+		case CardGameMessage.START:
+			this.start( (Deck) message.getData());
+		default:
+			this.table.println	("Wrong message type: " + message.getType());
+			// invalid message
+			break;
+		}
 	}
 
 	@Override
@@ -198,23 +246,33 @@ public class BigTwoClient implements CardGame, NetworkGame{
 	}
 
 	class ServerHandler implements Runnable{
-
+		
+		private ObjectInputStream objReader;
+		
+		public ServerHandler(){
+			try{
+				this.objReader = new ObjectInputStream(sock.getInputStream());
+			}catch (Exception ex){
+				System.out.println("err in creating obj input stream");
+				ex.printStackTrace();
+			}
+		}//constructor
+		
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			String message;
+			CardGameMessage msg;
 			try {
-				while ((message = oos.readLine()) != null) {
-					System.out.println("read " + message);
-					incoming.append(message + "\n");
-				} 
+				// waits for messages from the client
+				while ((msg = (CardGameMessage) this.objReader.readObject()) != null) {
+					parseMessage(msg);
+				} // close while
 			} catch (Exception ex) {
-					ex.printStackTrace();
+				ex.printStackTrace();
+				System.out.println("cannot read object from stream");
 			}
-			
-			
+				
+			}
 		}
-		
-	}
-	
+
 }

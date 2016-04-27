@@ -1,0 +1,21 @@
+
+
+import javax.swing.JOptionPane;
+
+public class test {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		BigTwoClient a = new BigTwoClient();
+		
+		//create user name
+		String inputValue = JOptionPane.showInputDialog("Please input your name:");
+		a.setPlayerName(inputValue);
+		Deck temp = new Deck();
+		temp.initialize();
+		a.start(temp);
+		
+	}
+
+}

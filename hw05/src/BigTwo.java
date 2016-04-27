@@ -16,6 +16,7 @@ public class BigTwo implements CardGame {
 	private Hand currentPlayerHand;
 	private int howManyPeoplePass = 0;
 	private Hand prevPlayerHand = null;
+	
 	private BigTwoTable t;
 	/**
 	 * return how many players are playing this game
@@ -63,117 +64,26 @@ public class BigTwo implements CardGame {
 	}
 
 	/**
-	 * a method deciding whether the game is ended, return true if the game is ended, false if the game should not end
+	 * start a BigTwo card game
 	 */
 	@Override
-	public boolean endOfGame() {
-		if (playerList.get(0).getNumOfCards() == 0 || playerList.get(1).getNumOfCards() == 0
-				|| playerList.get(2).getNumOfCards() == 0 || playerList.get(3).getNumOfCards() == 0) {
-			return true;// game ended
-		} else {// game continues
-			return false;
-		}
+	public void start(Deck deck) {
+
+		//deck.initialize();
+		this.deck = deck;
+		
 	}
 
 	/**
-	 * public constructor for BigTwo class
+	 * a method for checking the hands played by current player 
+	 * @param given a list of indices of the selected by the player 
 	 */
-	public BigTwo() {
-
-		// initializing variables, there will be 4 players and 52 cards in a
-		// BigTwo game
-		numOfPlayers = 4;
-		playerList = new ArrayList<CardGamePlayer>();
-		handsOnTable = new ArrayList<Hand>();
-		deck = new BigTwoDeck();
-		deck.initialize();
-		
-		// add card game players into the playerList and randomly distributes 13
-		// cards for each player
-		for (int i = 0; i < 4; i++) {
-			CardGamePlayer player = new CardGamePlayer();
-			for (int j = 0; j < 13; j++) {
-				player.addCard(deck.getCard(i * 13 + j));
-			}
-			player.sortCardsInHand();
-			playerList.add(player);
-		}
-
-		// before everything begin make sure everything is right
-		/* For debug use **************************************************/
-		/*System.out.println("Num of player: " + numOfPlayers);
-		for (CardGamePlayer p : playerList) {
-			System.out.println(
-					"name: " + p.getName() + "score: " + p.getScore() + "num hand: " + p.getNumOfCards() + " list: ");
-			p.getCardsInHand().print();
-		}
-		System.out.println("current id : " + currentIdx);
-		/* For debug use **************************************************/
-		
-		firstPlay = true;
-		currentPlayerHand = null;
-		howManyPeoplePass = 0;
-		prevPlayerHand = null;
-	}
-
 	@Override
-	public void start(Deck deck) {
-		// TODO Auto-generated method stub
-		// searching who has diamond three, player with diamond three should
-				for (int i = 0; i < playerList.size(); i++) {
-					if (playerList.get(i).getCardsInHand().contains(new BigTwoCard(0, 2))) {
-						currentIdx = i;
-						break;
-					}
-				}
-				t = new BigTwoTable(this);
-				t.setActivePlayer(currentIdx);
-				t.repaint();
-				t.clearTextArea();
-				// game start
-				while (!endOfGame()) {
-
-					t.setActivePlayer(currentIdx);
-					t.repaint();
-					if (t.isPass() || t.isPlay()) {
-										
-						if (t.isPass()) {
-							//System.out.println("Player "+this.currentIdx+" pass");
-							t.println("Player "+this.currentIdx+" pass");
-							t.setPass(false);
-							howManyPeoplePass++;
-							currentIdx++;
-							currentIdx = currentIdx % this.getNumOfPlayers();
-							t.resetSelected();
-							// pass mechanism
-						} else if (t.isPlay() ) {
-							//System.out.println("Player "+this.currentIdx + " play");
-							t.println("Player "+this.currentIdx + " play");
-							t.setPlay(false);
-							checkMove(t.getSelected());
-							t.resetSelected();
-						}
-					}
-				}
-
-				// game ends, and show the game statistics
-				System.out.println("\nGame ends");
-				for (CardGamePlayer p : playerList) {
-					//System.out.println(p.getName() + " has " + p.getNumOfCards() + " of cards in hand. ");
-					t.println(p.getName() + " has " + p.getNumOfCards() + " of cards in hand. ");
-				}
-	}
-
-	@Override
-	public void makeMove(int playerID, int[] cardIdx) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void checkMove(int playerID, int[] cardIdx) {
-		// TODO Auto-generated method stub
+	public void checkMove(int playerID, int[] cardIdx) {// don't need to consider player pass the game
 		CardList userWantToPlay = new CardList();
+		
+		this.currentIdx = playerID;
+		
 		if (cardIdx.length == 0) {
 			//System.out.println("player play nothing error");
 			t.println("player play nothing error");
@@ -231,9 +141,127 @@ public class BigTwo implements CardGame {
 		}
 	}
 
+	/**
+	 * a method deciding whether the game is ended, return true if the game is ended, false if the game should not end
+	 */
+	@Override
+	public boolean endOfGame() {
+		if (playerList.get(0).getNumOfCards() == 0 || playerList.get(1).getNumOfCards() == 0
+				|| playerList.get(2).getNumOfCards() == 0 || playerList.get(3).getNumOfCards() == 0) {
+			return true;// game ended
+		} else {// game continues
+			return false;
+		}
+	}
+
+	/**
+	 * public constructor for BigTwo class
+	 */
+	public BigTwo() {
+
+		// initializing variables, there will be 4 players and 52 cards in a
+		// BigTwo game
+		numOfPlayers = 4;
+		playerList = new ArrayList<CardGamePlayer>();
+		handsOnTable = new ArrayList<Hand>();
+		
+		// before everything begin make sure everything is right
+		/* For debug use **************************************************/
+		/*System.out.println("Num of player: " + numOfPlayers);
+		for (CardGamePlayer p : playerList) {
+			System.out.println(
+					"name: " + p.getName() + "score: " + p.getScore() + "num hand: " + p.getNumOfCards() + " list: ");
+			p.getCardsInHand().print();
+		}
+		System.out.println("current id : " + currentIdx);
+		/* For debug use **************************************************/
+		
+		firstPlay = true;
+		currentPlayerHand = null;
+		howManyPeoplePass = 0;
+		prevPlayerHand = null;
+		
+		// add card game players into the playerList and randomly distributes 13
+				// cards for each player
+				for (int i = 0; i < 4; i++) {
+					CardGamePlayer player = new CardGamePlayer();
+					for (int j = 0; j < 13; j++) {
+						player.addCard(this.deck.getCard(i * 13 + j));
+					}
+					player.sortCardsInHand();
+					playerList.add(player);
+				}
+				
+				// searching who has diamond three, player with diamond three should
+				for (int i = 0; i < playerList.size(); i++) {
+					if (playerList.get(i).getCardsInHand().contains(new BigTwoCard(0, 2))) {
+						currentIdx = i;
+						break;
+					}
+				}
+				t = new BigTwoTable(this);
+				t.setActivePlayer(currentIdx);
+				t.repaint();
+				t.clearTextArea();
+				// game start
+				while (!endOfGame()) {
+
+					t.setActivePlayer(currentIdx);
+					t.repaint();
+					if (t.isPass() || t.isPlay()) {
+										
+						if (t.isPass()) {
+							//System.out.println("Player "+this.currentIdx+" pass");
+							t.println("Player "+this.currentIdx+" pass");
+							t.setPass(false);
+							howManyPeoplePass++;
+							currentIdx++;
+							currentIdx = currentIdx % this.getNumOfPlayers();
+							t.resetSelected();
+							// pass mechanism
+						} else if (t.isPlay() ) {
+							//System.out.println("Player "+this.currentIdx + " play");
+							t.println("Player "+this.currentIdx + " play");
+							t.setPlay(false);
+							checkMove(this.currentIdx,t.getSelected());
+							t.resetSelected();
+						}
+					}
+				}
+
+				// game ends, and show the game statistics
+				System.out.println("\nGame ends");
+				for (CardGamePlayer p : playerList) {
+					//System.out.println(p.getName() + " has " + p.getNumOfCards() + " of cards in hand. ");
+					t.println(p.getName() + " has " + p.getNumOfCards() + " of cards in hand. ");
+				}
+		
+	}
+
+//	/**
+//	 * create a BigTwo game test the game
+//	 * @param input argument
+//	 */
+//	
+//	 public static void main(String[] args) { 
+//		 BigTwo firstRound = new BigTwo(); 
+//		 firstRound.start(); 
+//	 }
+
+
+	@Override
+	public void makeMove(int playerID, int[] cardIdx) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	@Override
 	public boolean isPlaying() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	public BigTwoTable getTable(){
+		return this.t;
 	}
 }
