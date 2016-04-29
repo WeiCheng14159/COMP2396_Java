@@ -20,13 +20,16 @@ public class BigTwoTable implements CardGameTable {
 	private JPanel BigTwoPanel;// show the cards of each player
 	private JButton playButton;// just a wing component
 	private JButton passButton;
+	private JButton sendButton;
 	private JTextArea textArea;// show game status same as the console output
+	private JTextArea textArea1;
 	private Image[][] cardImages;// load the image of each poker card
 	private Image cardBackImage;// the back of the card
 	private Image[] avatars;// the head icon
 	private boolean pass = false;
 	private boolean play = false;
-
+	private boolean send = false;
+	
 	/**
 	 * public constructor for BigTwoTable
 	 * @param game The parameter game is a reference to a card game associates with this table
@@ -70,10 +73,13 @@ public class BigTwoTable implements CardGameTable {
 		// create needed object first
 		playButton = new JButton("play game");
 		passButton = new JButton("pass the game");
+		sendButton = new JButton("send message");
+		
 		// add listener object, also called registration process
 		playButton.addActionListener(new PlayButtonListener());
 		passButton.addActionListener(new PassButtonListener());
-
+		sendButton.addActionListener(new SendButtonListener());
+		
 		textArea = new JTextArea("text area");
 		textArea.setLineWrap(true);
 
@@ -90,6 +96,7 @@ public class BigTwoTable implements CardGameTable {
 
 		bottomButtons.add(playButton);
 		bottomButtons.add(passButton);
+		bottomButtons.add(sendButton);
 
 		this.BigTwoPanel = new BigTwoPanel();
 
@@ -129,15 +136,14 @@ public class BigTwoTable implements CardGameTable {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
-			// System.out.println("mouse coordiante: x: "+e.getX()+" y:
-			// "+e.getY() );
+			System.out.println("mouse coordiante: x: "+e.getX()+" y:"+e.getY() );
 			int x = (e.getX() - 200) / 30;
 			int y = (e.getY() - 50) / 150;
 
-			// System.out.println(activePlayer);
+			System.out.println(activePlayer);
 
 			if (activePlayer == 0) {
-				//System.out.println("player 0");
+				System.out.println("player 0 is playing ");
 				if (x >= 0 && x <= cardsInHand - 1 && y >= 0 && y <= 1) {
 					if (selected[x]) {
 						selected[x] = false;
@@ -146,7 +152,7 @@ public class BigTwoTable implements CardGameTable {
 					}
 				}
 			} else if (activePlayer == 1) {
-				//System.out.println("player 1");
+				System.out.println("player 1");
 				if (x >= 0 && x <= cardsInHand - 1 && y >= 1 && y <= 2) {
 					if (selected[x]) {
 						selected[x] = false;
@@ -155,7 +161,7 @@ public class BigTwoTable implements CardGameTable {
 					}
 				}
 			} else if (activePlayer == 2) {
-				//System.out.println("player 2");
+				System.out.println("player 2");
 				if (x >= 0 && x <= cardsInHand - 1 && y >= 2 && y <= 3) {
 					if (selected[x]) {
 						selected[x] = false;
@@ -164,7 +170,7 @@ public class BigTwoTable implements CardGameTable {
 					}
 				}
 			} else if (activePlayer == 3) {
-				//System.out.println("player 3");
+				System.out.println("player 3");
 				if (x >= 0 && x <= cardsInHand - 1 && y >= 3 && y <= 4) {
 					if (selected[x]) {
 						selected[x] = false;
@@ -175,12 +181,12 @@ public class BigTwoTable implements CardGameTable {
 			} else {
 				System.out.println("err");
 			}
-			//System.out.print("which cards are selected: ");
-			/*for (int i : getSelected()) {
+			System.out.print("which cards are selected: ");
+			for (int i : getSelected()) {
 				System.out.print(i + " , ");
 			}
 			System.out.println("selected array size " + getSelected().length);
-			*/
+			this.repaint();
 		}
 
 		@Override
@@ -213,8 +219,10 @@ public class BigTwoTable implements CardGameTable {
 		public void paintComponent(Graphics g) {
 			for (int i = 0; i < game.getNumOfPlayers(); i++) {
 				for (int j = 0; j < game.getPlayerList().get(i).getNumOfCards(); j++) {
-					if (i == activePlayer) {
+					//if (i == activePlayer) {
+						if(true){
 						Card temp = game.getPlayerList().get(i).getCardsInHand().getCard(j);
+						
 						if (selected[j] != true) {
 							// this image should not pop up
 							g.drawImage(new ImageIcon("images/" + temp.rank + temp.suit + ".gif").getImage(),
@@ -389,6 +397,14 @@ public class BigTwoTable implements CardGameTable {
 		this.play = play;
 	}
 
+	public boolean isSend() {
+		return send;
+	}
+
+	public void setSend(boolean send) {
+		this.send = send;
+	}
+
 	/**
 	 * an inner class that implements the ActionListener interface to handle the click event for play button.
 	 * @author m2-4790k
@@ -397,8 +413,15 @@ public class BigTwoTable implements CardGameTable {
 	class PlayButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
-			setPlay(true);
-			//System.out.print(event.getActionCommand());
+			
+			if( game.getCurrentIdx() == activePlayer){
+				setPlay(true);
+				game.makeMove(activePlayer, getSelected());
+			}else{
+				resetSelected();
+				//System.out.println("not allow to play, not your turn ");
+				//System.out.println("id: "+game.getCurrentIdx() +"his turn");
+			}
 		}
 	}
 
@@ -412,10 +435,26 @@ public class BigTwoTable implements CardGameTable {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			// TODO Auto-generated method stub
-			setPass(true);
-			//System.out.print(event.getActionCommand());
+			if( game.getCurrentIdx() == activePlayer){
+				setPass(true);
+				game.makeMove(activePlayer, getSelected());
+			}else{
+				resetSelected();
+			}
 		}
 	}
+	
+	class SendButtonListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			// TODO Auto-generated method stub
+			setSend(true);
+			System.out.println("send button");
+			game.makeMove(-1, null);
+		}
+	}
+	
 
 	/**
 	 * an inner class that implements the ActionListener interface to handle the menu-item-click event
@@ -445,4 +484,6 @@ public class BigTwoTable implements CardGameTable {
 
 		}
 	}
+	
+	
 }

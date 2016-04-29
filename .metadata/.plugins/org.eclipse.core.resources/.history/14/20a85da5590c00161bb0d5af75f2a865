@@ -1,0 +1,28 @@
+
+
+import javax.swing.JOptionPane;
+
+public class test {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		BigTwoClient a = new BigTwoClient();
+		BigTwoClient b = new BigTwoClient();
+		BigTwoClient c = new BigTwoClient();
+		BigTwoClient d = new BigTwoClient();
+		
+		//BigTwoDeck p = new BigTwoDeck();
+		//p.initialize();
+		
+		//a.start(p);
+		/*b.start(p);
+		c.start(p);
+		d.start(p);
+		*/
+		
+		
+		
+	}
+
+}

@@ -144,16 +144,19 @@ public class CardGameServer {
 		case CardGameMessage.JOIN:
 			// adds a player to the game
 			addPlayer(clientSocket, (String) message.getData());
+			println((String)message.getData());
 			break;
 		case CardGameMessage.READY:
 			// marks the specified player as ready for a new game
 			setReadyState(clientSocket);
+			println("ready");
 			break;
 		case CardGameMessage.MOVE:
 			println("Broadcasts a \"MOVE\" message from "
-					+ clientSocket.getRemoteSocketAddress());
+					+ clientSocket.getRemoteSocketAddress() +" id : " +message.getPlayerID() +"   "+(int []) message.getData());
 			// broadcast the MOVE message to all clients
 			broadcastMessage(message);
+			//println(message.getPlayerID() + (int[])message.getData());
 			break;
 		case CardGameMessage.MSG:
 			println("Broadcasts a user message from "

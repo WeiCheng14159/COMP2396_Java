@@ -1,0 +1,490 @@
+import java.util.*;
+import javax.imageio.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.*;
+import java.io.*;
+/**
+ * BigTwoTable class implementation 
+ * @author m2-4790k
+ *
+ */
+public class BigTwoTable implements CardGameTable {
+
+	private CardGame game;// what kind of game is being played
+	private boolean[] selected;// which card is selected
+	private int activePlayer;// the index of active player
+	private int activeSelection;// index of active player
+	private JFrame frame;// main window of the game
+	private JPanel BigTwoPanel;// show the cards of each player
+	private JButton playButton;// just a wing component
+	private JButton passButton;
+	private JButton sendButton;
+	private JTextArea textArea;// show game status same as the console output
+	private JTextArea textArea1;
+	private Image[][] cardImages;// load the image of each poker card
+	private Image cardBackImage;// the back of the card
+	private Image[] avatars;// the head icon
+	private boolean pass = false;
+	private boolean play = false;
+	private boolean send = false;
+	
+	/**
+	 * public constructor for BigTwoTable
+	 * @param game The parameter game is a reference to a card game associates with this table
+	 */
+	public BigTwoTable(CardGame game) {
+		
+		// game
+		this.game = game;
+		// active player
+		this.activePlayer = game.getCurrentIdx();
+		//System.out.println("current player: " + this.activePlayer);
+		// active selection
+		this.activeSelection = game.getCurrentIdx();
+		// selected
+		this.selected = new boolean[game.getPlayerList().get(activePlayer).getNumOfCards()];
+		// button status
+		this.pass = false;
+		this.play = false;
+
+		// store the head icons
+		avatars = new Image[4];
+		avatars[0] = new ImageIcon("images/black.png").getImage();
+		avatars[1] = new ImageIcon("images/green.png").getImage();
+		avatars[2] = new ImageIcon("images/purple.png").getImage();
+		avatars[3] = new ImageIcon("images/red.png").getImage();
+
+		// card image array
+		this.cardImages = new Image[4][13];
+		// store the card front image into the 2d array
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 13; j++) {
+				// System.out.println("store card with num "+j+" and suit "+i+"
+				// into the 2d array >> images/"+j+i+".gif");
+				this.cardImages[i][j] = new ImageIcon("images/" + j + i + ".gif").getImage();
+			}
+		}
+
+		// store the card back image into private variable
+		this.cardBackImage = new ImageIcon("images/04.gif").getImage();
+
+		// create needed object first
+		playButton = new JButton("play game");
+		passButton = new JButton("pass the game");
+		sendButton = new JButton("send message");
+		
+		// add listener object, also called registration process
+		playButton.addActionListener(new PlayButtonListener());
+		passButton.addActionListener(new PassButtonListener());
+		sendButton.addActionListener(new SendButtonListener());
+		
+		textArea = new JTextArea("text area");
+		textArea.setLineWrap(true);
+
+		// create a frame here, is the main drawing panel
+		this.frame = new JFrame();
+		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// create a scroller for text area
+		JScrollPane scroller = new JScrollPane(textArea);
+		scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+		JPanel bottomButtons = new JPanel();
+		bottomButtons.setBackground(Color.YELLOW);
+
+		bottomButtons.add(playButton);
+		bottomButtons.add(passButton);
+		bottomButtons.add(sendButton);
+
+		this.BigTwoPanel = new BigTwoPanel();
+
+		// add swing component to this panel, but how do i specify the position
+		// of the component ?
+		this.frame.add(BorderLayout.SOUTH, bottomButtons);
+		this.frame.add(BorderLayout.EAST, scroller);
+		this.frame.add(BorderLayout.CENTER, this.BigTwoPanel);
+
+		// can i use this two method to control whether i can control the panel
+		// ? like disable the touch function ?
+		this.frame.setSize(1000, 1000);
+		this.frame.setVisible(true);
+	}
+
+	/**
+	 * a method for painting the GUI
+	 */
+	@Override
+	public void repaint() {
+		this.frame.repaint();
+	}
+
+	/**
+	 * a inner class BigTwoPanel for showing players' cards
+	 * BigTwoPanel class also implements the mouseListener object
+	 * @author m2-4790k
+	 */
+	class BigTwoPanel extends JPanel implements MouseListener {
+
+		int cardsInHand = game.getPlayerList().get(activePlayer).getNumOfCards();
+
+		public BigTwoPanel() {
+			this.addMouseListener(this);
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			// System.out.println("mouse coordiante: x: "+e.getX()+" y:
+			// "+e.getY() );
+			int x = (e.getX() - 200) / 30;
+			int y = (e.getY() - 50) / 150;
+
+			System.out.println(activePlayer);
+
+			if (activePlayer == 0) {
+				System.out.println("player 0");
+				if (x >= 0 && x <= cardsInHand - 1 && y >= 0 && y <= 1) {
+					if (selected[x]) {
+						selected[x] = false;
+					} else {
+						selected[x] = true;
+					}
+				}
+			} else if (activePlayer == 1) {
+				System.out.println("player 1");
+				if (x >= 0 && x <= cardsInHand - 1 && y >= 1 && y <= 2) {
+					if (selected[x]) {
+						selected[x] = false;
+					} else {
+						selected[x] = true;
+					}
+				}
+			} else if (activePlayer == 2) {
+				System.out.println("player 2");
+				if (x >= 0 && x <= cardsInHand - 1 && y >= 2 && y <= 3) {
+					if (selected[x]) {
+						selected[x] = false;
+					} else {
+						selected[x] = true;
+					}
+				}
+			} else if (activePlayer == 3) {
+				System.out.println("player 3");
+				if (x >= 0 && x <= cardsInHand - 1 && y >= 3 && y <= 4) {
+					if (selected[x]) {
+						selected[x] = false;
+					} else {
+						selected[x] = true;
+					}
+				}
+			} else {
+				System.out.println("err");
+			}
+			System.out.print("which cards are selected: ");
+			for (int i : getSelected()) {
+				System.out.print(i + " , ");
+			}
+			System.out.println("selected array size " + getSelected().length);
+			this.repaint();
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+		
+		/**
+		 * override the paintComponent method inherited from the JPanel class to draw the card panel
+		 */
+		public void paintComponent(Graphics g) {
+			for (int i = 0; i < game.getNumOfPlayers(); i++) {
+				for (int j = 0; j < game.getPlayerList().get(i).getNumOfCards(); j++) {
+					//if (i == activePlayer) {
+						if(true){
+						Card temp = game.getPlayerList().get(i).getCardsInHand().getCard(j);
+						
+						if (selected[j] != true) {
+							// this image should not pop up
+							g.drawImage(new ImageIcon("images/" + temp.rank + temp.suit + ".gif").getImage(),
+									200 + 30 * j, 50 + 150 * i, this);
+						} else {
+							// this image should pop up
+							g.drawImage(new ImageIcon("images/" + temp.rank + temp.suit + ".gif").getImage(),
+									200 + 30 * j, 20 + 150 * i, this);
+						}
+					} else {// this player is not playing
+						g.drawImage(new ImageIcon("images/04.gif").getImage(), 200 + 30 * j, 50 + 150 * i, this);
+					}
+				}
+			}
+			// draw head
+			g.drawImage(avatars[0], 0, 50, this);
+			g.drawImage(avatars[1], 0, 200, this);
+			g.drawImage(avatars[2], 0, 350, this);
+			g.drawImage(avatars[3], 0, 500, this);
+			
+			//this section will draw the cards on table
+			if( game.getHandsOnTable().size() != 0){
+				int last_hand_index = game.getHandsOnTable().size();
+				Hand t = game.getHandsOnTable().get(last_hand_index-1);
+				for( int i = 0 ; i < t.size();i++){
+					Card temp = t.getCard(i);
+					g.drawImage(new ImageIcon("images/" + temp.rank + temp.suit + ".gif").getImage(), 200 + 30 * i , 50 + 150 * 4,this);
+				}
+			}
+		}
+
+	}// inner class end
+
+	/**
+	 * a method for setting the index of the active player
+	 * @param activePlayer : the index current activePlayer
+	 */
+	@Override
+	public void setActivePlayer(int activePlayer) {
+		// TODO Auto-generated method stub
+		this.activePlayer = activePlayer;
+
+	}
+
+	/**
+	 * a method for setting the index of the active selection 
+	 * @param activeSelection : the index of current active selection player
+	 */
+	@Override
+	public void setActiveSelection(int activeSelection) {
+		// TODO Auto-generated method stub
+		this.activeSelection = activeSelection;
+	}
+
+	/**
+	 * a method for getting an array of indices of the cards selected
+	 * return an integer array specifying the indices
+	 */
+	@Override
+	public int[] getSelected() {
+		// TODO Auto-generated method stub
+		if (this.selected.length == 0) {
+			return null;
+		}
+		ArrayList<Integer> cardIndex = new ArrayList<Integer>();
+		for (int i = 0; i < this.selected.length; i++) {
+			if (selected[i] == true) {
+				cardIndex.add(i);
+			}
+		}
+		int[] indices = new int[cardIndex.size()];
+		for (int i = 0; i < cardIndex.size(); i++) {
+			indices[i] = cardIndex.get(i);
+		}
+		return indices;
+	}
+
+	/**
+	 * a method for resetting the list of selected cards
+	 */
+	@Override
+	public void resetSelected() {
+		// TODO Auto-generated method stub
+		for (int i = 0; i < selected.length; i++) {
+			selected[i] = false;
+		}
+	}
+
+	/** 
+	 * a method for printing the specified string to the text area of the GUI
+	 */
+	@Override
+	public void print(String msg) {
+		// TODO Auto-generated method stub
+		this.textArea.append(msg);
+	}
+
+	/**
+	 * a method for printing the specified string, followed by a newline, to the text area of the GUI
+	 */
+	@Override
+	public void println(String msg) {
+		// TODO Auto-generated method stub
+		this.textArea.append(msg+'\n');
+	}
+
+	/**
+	 * a method for clearing the text area of the GUI
+	 */
+	@Override
+	public void clearTextArea() {
+		// TODO Auto-generated method stub
+		this.textArea.setText("");
+	}
+
+	/** 
+	 * a method for resetting the text area on GUI
+	 */
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		clearTextArea();
+	}
+
+	/**
+	 * a method for enabling user interactions with the GUI
+	 */
+	@Override
+	public void enable() {// to enable user interaction with gui
+		// TODO Auto-generated method stub
+		frame.setVisible(true);
+	}
+
+	/**
+	 * a method for disabling user interactions with the GUI
+	 */
+	@Override
+	public void disable() {// disable user interaction with gui
+		// TODO Auto-generated method stub
+		frame.setVisible(false);
+	}
+
+	/** 
+	 * a getter function for getting the pass button status on the GUI
+	 * @return true if the button is pressed, false if the button isn't clicked
+	 */
+	public boolean isPass() {
+		return pass;
+	}
+
+	/**
+	 * a setter function for setting the status of the pass button on GUI
+	 * @param pass : a boolean variable representing the button status
+	 */
+	public void setPass(boolean pass) {
+		this.pass = pass;
+	}
+
+	/** 
+	 * a getter function for getting the play button status on the GUI
+	 * @return true if the button is pressed, false if the button isn't clicked
+	 */
+	public boolean isPlay() {
+		return play;
+	}
+
+	/**
+	 * a setter function for setting the status of the play button on GUI
+	 * @param play : a boolean variable representing the button status
+	 */
+	public void setPlay(boolean play) {
+		this.play = play;
+	}
+
+	public boolean isSend() {
+		return send;
+	}
+
+	public void setSend(boolean send) {
+		this.send = send;
+	}
+
+	/**
+	 * an inner class that implements the ActionListener interface to handle the click event for play button.
+	 * @author m2-4790k
+	 *
+	 */
+	class PlayButtonListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			
+			if( game.getCurrentIdx() == activePlayer){
+				setPlay(true);
+				game.makeMove(activePlayer, getSelected());
+			}else{
+				resetSelected();
+				//System.out.println("not allow to play, not your turn ");
+				//System.out.println("id: "+game.getCurrentIdx() +"his turn");
+			}
+		}
+	}
+
+	/**
+	 * an inner class that implements the ActionListener interface to handle the click event for pass button.
+	 * @author m2-4790k
+	 *
+	 */
+	class PassButtonListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			// TODO Auto-generated method stub
+			if( game.getCurrentIdx() == activePlayer){
+				setPass(true);
+				game.makeMove(activePlayer, getSelected());
+			}else{
+				resetSelected();
+			}
+		}
+	}
+	
+	class SendButtonListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			// TODO Auto-generated method stub
+			setSend(true);
+			System.out.println("send button");
+			game.makeMove(-1, null);
+		}
+	}
+	
+
+	/**
+	 * an inner class that implements the ActionListener interface to handle the menu-item-click event
+	 * @author m2-4790k
+	 *
+	 */
+	class RestartMenuItemListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+	}
+
+	/**
+	 * 
+	 * an inner class that implements the ActionListener interface to handle the menu-item-click event
+	 * @author m2-4790k
+	 *
+	 */
+	class QuitMenuItemListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+	}
+	
+	
+}
