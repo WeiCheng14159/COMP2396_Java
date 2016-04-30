@@ -12,7 +12,7 @@ import java.io.*;
  */
 public class BigTwoTable implements CardGameTable {
 
-	private CardGame game;// what kind of game is being played
+	private BigTwoClient game;// what kind of game is being played
 	private boolean[] selected;// which card is selected
 	private int activePlayer;// the index of active player
 	private int activeSelection;// index of active player
@@ -20,15 +20,15 @@ public class BigTwoTable implements CardGameTable {
 	private JPanel BigTwoPanel;// show the cards of each player
 	private JButton playButton;// just a wing component
 	private JButton passButton;
-	private JButton sendButton;
+	
 	private JTextArea textArea;// show game status same as the console output
-	private JTextArea textArea1;
+	private JTextArea sendArea;
+	private JTextArea msgArea; 
+	
 	private Image[][] cardImages;// load the image of each poker card
 	private Image cardBackImage;// the back of the card
 	private Image[] avatars;// the head icon
-	private boolean pass = false;
-	private boolean play = false;
-	private boolean send = false;
+	private JMenuBar bar; 
 	
 	/**
 	 * public constructor for BigTwoTable
@@ -37,7 +37,7 @@ public class BigTwoTable implements CardGameTable {
 	public BigTwoTable(CardGame game) {
 		
 		// game
-		this.game = game;
+		this.game = (BigTwoClient)( game);
 		// active player
 		this.activePlayer = game.getCurrentIdx();
 		//System.out.println("current player: " + this.activePlayer);
@@ -45,10 +45,7 @@ public class BigTwoTable implements CardGameTable {
 		this.activeSelection = game.getCurrentIdx();
 		// selected
 		this.selected = new boolean[game.getPlayerList().get(activePlayer).getNumOfCards()];
-		// button status
-		this.pass = false;
-		this.play = false;
-
+		
 		// store the head icons
 		avatars = new Image[4];
 		avatars[0] = new ImageIcon("images/black.png").getImage();
@@ -73,38 +70,69 @@ public class BigTwoTable implements CardGameTable {
 		// create needed object first
 		playButton = new JButton("play game");
 		passButton = new JButton("pass the game");
-		sendButton = new JButton("send message");
 		
 		// add listener object, also called registration process
 		playButton.addActionListener(new PlayButtonListener());
 		passButton.addActionListener(new PassButtonListener());
-		sendButton.addActionListener(new SendButtonListener());
-		
-		textArea = new JTextArea("text area");
-		textArea.setLineWrap(true);
 
+		textArea = new JTextArea("this is the text area for bigtwo game");
+		textArea.setBounds(0, 0, 300, 500);
+		textArea.setLineWrap(true);
+	
+		msgArea = new JTextArea("user message is here.");
+		msgArea.setBounds(0, 0, 300, 500);
+		msgArea.setLineWrap(true);
+		
+		sendArea = new JTextArea("send our message here");
+		sendArea.setBounds(200, 0, 50, 10);
+		sendArea.setLineWrap(true);
+		sendArea.addKeyListener(new sendListsner());
+		
+		bar = new JMenuBar();
+		JMenuItem con = new JMenuItem("connect");
+		con.addActionListener(new ConnectMenuItemListener());
+		
+		JMenuItem quit = new JMenuItem("quit");
+		quit.addActionListener(new QuitMenuItemListener());
+		
+		bar.add(quit);
+		bar.add(con);
+		
 		// create a frame here, is the main drawing panel
 		this.frame = new JFrame();
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		// create a scroller for text area
 		JScrollPane scroller = new JScrollPane(textArea);
+		JScrollPane scroller1 = new JScrollPane(msgArea);
+		
 		scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scroller1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scroller1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
+		
 		JPanel bottomButtons = new JPanel();
 		bottomButtons.setBackground(Color.YELLOW);
-
+		bottomButtons.setLayout(new BoxLayout( bottomButtons,BoxLayout.X_AXIS));
+		
 		bottomButtons.add(playButton);
 		bottomButtons.add(passButton);
-		bottomButtons.add(sendButton);
-
+		bottomButtons.add(sendArea);
+		
+		JPanel allMsg = new JPanel();
+		allMsg.setLayout(new BoxLayout(allMsg,BoxLayout.Y_AXIS));
+		allMsg.add(scroller1);
+		allMsg.add(scroller);
+		
 		this.BigTwoPanel = new BigTwoPanel();
 
 		// add swing component to this panel, but how do i specify the position
 		// of the component ?
 		this.frame.add(BorderLayout.SOUTH, bottomButtons);
-		this.frame.add(BorderLayout.EAST, scroller);
+		this.frame.add(BorderLayout.EAST, allMsg);
 		this.frame.add(BorderLayout.CENTER, this.BigTwoPanel);
+		this.frame.add(BorderLayout.NORTH, this.bar);
 
 		// can i use this two method to control whether i can control the panel
 		// ? like disable the touch function ?
@@ -128,7 +156,7 @@ public class BigTwoTable implements CardGameTable {
 	class BigTwoPanel extends JPanel implements MouseListener {
 
 		int cardsInHand = game.getPlayerList().get(activePlayer).getNumOfCards();
-
+		
 		public BigTwoPanel() {
 			this.addMouseListener(this);
 		}
@@ -136,15 +164,16 @@ public class BigTwoTable implements CardGameTable {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
-			System.out.println("mouse coordiante: x: "+e.getX()+" y:"+e.getY() );
+			System.out.println("mouse coordiante: x: "+e.getX()+" y:"+e.getY());
 			int x = (e.getX() - 200) / 30;
-			int y = (e.getY() - 50) / 150;
-
+			//int y = (e.getY() - 50) / 150;
+			int y = e.getY();
+			
 			System.out.println(activePlayer);
 
 			if (activePlayer == 0) {
 				System.out.println("player 0 is playing ");
-				if (x >= 0 && x <= cardsInHand - 1 && y >= 0 && y <= 1) {
+				if (x >= 0 && x <= cardsInHand - 1 && y >= 55 && y <= 155) {
 					if (selected[x]) {
 						selected[x] = false;
 					} else {
@@ -152,8 +181,8 @@ public class BigTwoTable implements CardGameTable {
 					}
 				}
 			} else if (activePlayer == 1) {
-				System.out.println("player 1");
-				if (x >= 0 && x <= cardsInHand - 1 && y >= 1 && y <= 2) {
+				System.out.println("player 1 is playing ");
+				if (x >= 0 && x <= cardsInHand - 1 && y >= 200 && y <= 300) {
 					if (selected[x]) {
 						selected[x] = false;
 					} else {
@@ -161,8 +190,8 @@ public class BigTwoTable implements CardGameTable {
 					}
 				}
 			} else if (activePlayer == 2) {
-				System.out.println("player 2");
-				if (x >= 0 && x <= cardsInHand - 1 && y >= 2 && y <= 3) {
+				System.out.println("player 2 is playing ");
+				if (x >= 0 && x <= cardsInHand - 1 && y >= 350 && y <= 450) {
 					if (selected[x]) {
 						selected[x] = false;
 					} else {
@@ -170,8 +199,8 @@ public class BigTwoTable implements CardGameTable {
 					}
 				}
 			} else if (activePlayer == 3) {
-				System.out.println("player 3");
-				if (x >= 0 && x <= cardsInHand - 1 && y >= 3 && y <= 4) {
+				System.out.println("player 3 is playing ");
+				if (x >= 0 && x <= cardsInHand - 1 && y >= 500 && y <= 600) {
 					if (selected[x]) {
 						selected[x] = false;
 					} else {
@@ -185,7 +214,7 @@ public class BigTwoTable implements CardGameTable {
 			for (int i : getSelected()) {
 				System.out.print(i + " , ");
 			}
-			System.out.println("selected array size " + getSelected().length);
+			//System.out.println("selected array size " + getSelected().length);
 			this.repaint();
 		}
 
@@ -219,8 +248,8 @@ public class BigTwoTable implements CardGameTable {
 		public void paintComponent(Graphics g) {
 			for (int i = 0; i < game.getNumOfPlayers(); i++) {
 				for (int j = 0; j < game.getPlayerList().get(i).getNumOfCards(); j++) {
-					//if (i == activePlayer) {
-						if(true){
+					if (i == activePlayer) {
+						//if(true){
 						Card temp = game.getPlayerList().get(i).getCardsInHand().getCard(j);
 						
 						if (selected[j] != true) {
@@ -297,6 +326,7 @@ public class BigTwoTable implements CardGameTable {
 		for (int i = 0; i < cardIndex.size(); i++) {
 			indices[i] = cardIndex.get(i);
 		}
+		//System.out.println("how many cards are selected "+indices.length);
 		return indices;
 	}
 
@@ -326,7 +356,7 @@ public class BigTwoTable implements CardGameTable {
 	@Override
 	public void println(String msg) {
 		// TODO Auto-generated method stub
-		this.textArea.append(msg+'\n');
+		this.textArea.append('\n'+msg+'\n');
 	}
 
 	/**
@@ -365,44 +395,12 @@ public class BigTwoTable implements CardGameTable {
 		frame.setVisible(false);
 	}
 
-	/** 
-	 * a getter function for getting the pass button status on the GUI
-	 * @return true if the button is pressed, false if the button isn't clicked
-	 */
-	public boolean isPass() {
-		return pass;
-	}
-
 	/**
-	 * a setter function for setting the status of the pass button on GUI
-	 * @param pass : a boolean variable representing the button status
+	 * a method to print all the messages sent by other players
+	 * @param msg
 	 */
-	public void setPass(boolean pass) {
-		this.pass = pass;
-	}
-
-	/** 
-	 * a getter function for getting the play button status on the GUI
-	 * @return true if the button is pressed, false if the button isn't clicked
-	 */
-	public boolean isPlay() {
-		return play;
-	}
-
-	/**
-	 * a setter function for setting the status of the play button on GUI
-	 * @param play : a boolean variable representing the button status
-	 */
-	public void setPlay(boolean play) {
-		this.play = play;
-	}
-
-	public boolean isSend() {
-		return send;
-	}
-
-	public void setSend(boolean send) {
-		this.send = send;
+	public void printMsg(String msg){
+		this.msgArea.append("\n"+msg+"\n");
 	}
 
 	/**
@@ -415,12 +413,11 @@ public class BigTwoTable implements CardGameTable {
 		public void actionPerformed(ActionEvent event) {
 			
 			if( game.getCurrentIdx() == activePlayer){
-				setPlay(true);
 				game.makeMove(activePlayer, getSelected());
-			}else{
 				resetSelected();
-				//System.out.println("not allow to play, not your turn ");
-				//System.out.println("id: "+game.getCurrentIdx() +"his turn");
+			}else{
+				println("not your turn !!!");
+				resetSelected();
 			}
 		}
 	}
@@ -436,23 +433,43 @@ public class BigTwoTable implements CardGameTable {
 		public void actionPerformed(ActionEvent event) {
 			// TODO Auto-generated method stub
 			if( game.getCurrentIdx() == activePlayer){
-				setPass(true);
 				game.makeMove(activePlayer, getSelected());
+				resetSelected();
 			}else{
+				println("not your turn !!!");
 				resetSelected();
 			}
 		}
 	}
-	
-	class SendButtonListener implements ActionListener {
+
+	/**
+	 * an inner class that implements the ActionListener interface to handle the send message event 
+	 * @author chengwei
+	 *
+	 */
+	class sendListsner implements KeyListener{
 
 		@Override
-		public void actionPerformed(ActionEvent event) {
+		public void keyTyped(KeyEvent e) {
 			// TODO Auto-generated method stub
-			setSend(true);
-			System.out.println("send button");
-			game.makeMove(-1, null);
 		}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			// TODO Auto-generated method stub
+			if( e.getKeyCode() == KeyEvent.VK_ENTER){
+				game.sendMessage(new CardGameMessage(CardGameMessage.MSG, -1 , sendArea.getText()));
+				sendArea.setText("");
+			}
+			
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 	
 
@@ -461,12 +478,12 @@ public class BigTwoTable implements CardGameTable {
 	 * @author m2-4790k
 	 *
 	 */
-	class RestartMenuItemListener implements ActionListener {
+	class ConnectMenuItemListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
-
+			game.makeConnection();
 		}
 	}
 
@@ -481,7 +498,7 @@ public class BigTwoTable implements CardGameTable {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
-
+			System.exit(0);
 		}
 	}
 	

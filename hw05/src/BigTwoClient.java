@@ -29,11 +29,17 @@ public class BigTwoClient implements CardGame, NetworkGame{
 	private Hand prevPlayerHand = null;//used in game logic
 	private int howManyPeoplePass = 0;//used in game logic
 	
+	/**
+	 * main method for starting a BigTwoCLient
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		BigTwoClient c = new BigTwoClient();
-		System.out.println("end the game");
-	} // main
+	} 
 	
+	/**
+	 * public constructor for BigTwoClient
+	 */
 	public BigTwoClient(){
 		
 		/*
@@ -59,35 +65,60 @@ public class BigTwoClient implements CardGame, NetworkGame{
 		this.makeConnection();//coolest part !!
 	}
 	
+	/**
+	 * a method returns total number of players
+	 * return an integer or total number of players
+	 */
 	@Override
 	public int getNumOfPlayers() {
 		// TODO Auto-generated method stub
 		return playerList.size();//when is this called, is it initialized ?
 	}
+	
+	/**
+	 * a method returns the deck used in the game
+	 */
 
 	@Override
 	public Deck getDeck() {
 		// TODO Auto-generated method stub
 		return this.deck;
 	}
+	
+	/**
+	 * a method returns a list of players
+	 */
 
 	@Override
 	public ArrayList<CardGamePlayer> getPlayerList() {
 		// TODO Auto-generated method stub
 		return playerList;
 	}
+	
+	/**
+	 * a method returns the latest hand player on the table
+	 */
 
 	@Override
 	public ArrayList<Hand> getHandsOnTable() {
 		// TODO Auto-generated method stub
 		return handsOnTable;
 	}
+	
+	/**
+	 * a method returns the id of the current player
+	 */
 
 	@Override
 	public int getCurrentIdx() {
 		// TODO Auto-generated method stub
 		return currentIdx;
 	}
+	
+	/**
+	 * a method to start the game
+	 * @param Deck deck : a deck of cards which is going to be used in this game
+	 */
 
 	@Override
 	public void start(Deck deck) {
@@ -130,8 +161,13 @@ public class BigTwoClient implements CardGame, NetworkGame{
 		this.table.setActivePlayer(this.getPlayerID());
 		this.table.setActiveSelection(this.getPlayerID());
 		this.table.repaint();
-				
 	}
+	
+	/**
+	 * a method to make a move when the client receive a move message
+	 * @param int playerID : id of the player who is playing this move
+	 * @param int [] cardIdx : an array of indices specifying the indices played by the player
+	 */
 
 	@Override
 	public void makeMove(int playerID, int[] cardIdx) {
@@ -146,8 +182,13 @@ public class BigTwoClient implements CardGame, NetworkGame{
 		 * */
 		
 		this.sendMessage ( new CardGameMessage(CardGameMessage.MOVE, -1, cardIdx) );
-		
+		this.table.repaint();
 	}
+	/**
+	 * a method used to check the move made by other players when client receive move message
+	 * @param int playerID : id of the player who play this move
+	 * @param int[] cardIdx : an array of indices specifying the indices played by the players
+	 */
 
 	@Override
 	public void checkMove(int playerID, int[] cardIdx) {
@@ -162,15 +203,11 @@ public class BigTwoClient implements CardGame, NetworkGame{
 		 * */
 		
 		CardList userWantToPlay = new CardList();
-		if (cardIdx.length == 0) {
-			System.out.println("player play nothing error");
-		} else {
-			System.out.println("who is playing the game "+this.currentIdx);
-			for (int i = 0; i < cardIdx.length; i++) {
-				userWantToPlay.addCard(this.playerList.get(this.playerID).getCardsInHand().getCard(cardIdx[i]));
-			} // what cards do user want to play ?
-		}
-
+		
+		for (int i = 0; i < cardIdx.length; i++) {
+			userWantToPlay.addCard(this.playerList.get(playerID).getCardsInHand().getCard(cardIdx[i]));
+		} // what cards do user want to play ?
+	
 		CardGamePlayer currentPlayer = playerList.get(playerID);//define current user
 		Card smallThree = new BigTwoCard(0, 2);//define small three card which should play first
 
@@ -182,12 +219,11 @@ public class BigTwoClient implements CardGame, NetworkGame{
 					currentPlayer.removeCards(userWantToPlay);
 					handsOnTable.add(h);
 					prevPlayerHand = h;
-					System.out.println("making a valid move");
 					this.currentIdx++;
 					this.currentIdx = currentIdx % this.getNumOfPlayers();
+					this.table.println("player "+playerID+" is playing : "+h.toString());
 				} else {//not a legal move
-					System.out.println("Not a legal move!!!");
-					System.out.println("Player must play \u26663 in the first round.");
+					this.table.println("Player must play \u26663 in the first round.");
 				}
 			} else {// not first play, normal round
 				if (howManyPeoplePass >= 3) {// you can play any hand, you have the biggest hand
@@ -197,6 +233,7 @@ public class BigTwoClient implements CardGame, NetworkGame{
 					currentPlayer.removeCards(userWantToPlay);
 					handsOnTable.add(h);
 					prevPlayerHand = h;
+					this.table.println("player "+playerID+" is playing : "+h.toString());
 				} else {// your hand must beat someone
 					if (h.beats(prevPlayerHand)) {// you beat it !
 						howManyPeoplePass = 0;
@@ -205,83 +242,148 @@ public class BigTwoClient implements CardGame, NetworkGame{
 						prevPlayerHand = h;
 						currentIdx++;
 						currentIdx = currentIdx % this.getNumOfPlayers();
+						this.table.println("player "+playerID+" is playing : "+h.toString());
 					} else {// your hand cannot beat someone
-						System.out.println("your card is valid but cannot beat the cards on the table");
+						this.table.println("your card is valid but cannot beat the cards on the table");
 					}
 				}
 			}
 		} else {// this is not a valid hand in this game
-			System.out.println("Not a valid hand");
-			this.table.println("Not a valid hand");
+			if(!this.first){
+				if(h.size() == 0){
+					//this.table.println("pass the game");
+					currentIdx++;
+					currentIdx = currentIdx % this.getNumOfPlayers();
+					howManyPeoplePass++;
+					this.table.println("player "+playerID+" pass the game");
+				}else{
+					this.table.println("Not a valid hand");
+				}
+			}else{
+				this.table.println("you must play a valid hand with diamond three ");
+			}
 		}
+		//end all the logic checking repaint the table
+		this.table.repaint();
+		
 	}
 
+	
+	/**
+	 * a method to check whether the game is still going on 
+	 */
 	@Override
 	public boolean isPlaying() {
 		// TODO Auto-generated method stub
-		//return !this.endOfGame();
-		return true;
+		return !this.endOfGame();
+		//return true;
 	}
+	
+	/**
+	 * a method checking whether the game ends or not
+	 */
 
 	@Override
 	public boolean endOfGame() {
 		// TODO Auto-generated method stub
-		/*if (playerList.get(0).getNumOfCards() == 0 || playerList.get(1).getNumOfCards() == 0
+		if (playerList.get(0).getNumOfCards() == 0 || playerList.get(1).getNumOfCards() == 0
 				|| playerList.get(2).getNumOfCards() == 0 || playerList.get(3).getNumOfCards() == 0) {
 			return true;// game ended
 		} else {// game continues
 			return false;
-		}*/
-		return false;
+		}
 	}
+	
+	/**
+	 * a method to get the local player id
+	 * @return the id od local player
+	 */
 
 	@Override
 	public int getPlayerID() {
 		// TODO Auto-generated method stub
 		return this.playerID;//get player id of local user
 	}
+	
+	/**
+	 * a method for setting the id of local player
+	 */
 
 	@Override
 	public void setPlayerID(int playerID) {
 		// TODO Auto-generated method stub
 		this.playerID = playerID;//set player id for local user
 	}
+	
+	/**
+	 * a method for getting the name of the local player
+	 * @return the name of local player in String style
+	 */
 
 	@Override
 	public String getPlayerName() {
 		// TODO Auto-generated method stub
 		return this.playerList.get(this.playerID).getName();//get the name of local user
 	}
+	
+	/**
+	 * a method for setting the name of local player
+	 * @param String playerName : the name of player
+	 */
 
 	@Override
 	public void setPlayerName(String playerName) {
 		// TODO Auto-generated method stub
 		this.playerList.get(this.playerID).setName(playerName);//set the name for local user, noted that the player id is the id of local user
 	}
+	
+	/**
+	 * a method to get the ip of the server
+	 * @return server's ip in string
+	 */
 
 	@Override
 	public String getServerIP() {
 		// TODO Auto-generated method stub
 		return this.serverIP;
 	}
+	
+	/**
+	 * a method setting server's ip
+	 * @param ip in string 
+	 */
 
 	@Override
 	public void setServerIP(String serverIP) {
 		// TODO Auto-generated method stub
 		this.serverIP = serverIP;
 	}
+	
+	/**
+	 * a method for getting the port of server
+	 * @return serverPort in integer
+	 */
 
 	@Override
 	public int getServerPort() {
 		// TODO Auto-generated method stub
 		return this.serverPort;
 	}
+	
+	/**
+	 * a method for setting the server port 
+	 * @param server port in integer
+	 */
 
 	@Override
 	public void setServerPort(int serverPort) {
 		// TODO Auto-generated method stub
 		this.serverPort = serverPort;
 	}
+	
+	/**
+	 * a method to make connection with the server
+	 */
 
 	@Override
 	public void makeConnection() {
@@ -308,9 +410,12 @@ public class BigTwoClient implements CardGame, NetworkGame{
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		
 	}
 	
+	/**
+	 * a method for checking the message received from the server
+	 * @param GameMessage : the message received from the server
+	 */
 	@Override
 	public void parseMessage(GameMessage message) {
 		// TODO Auto-generated method stub
@@ -321,27 +426,24 @@ public class BigTwoClient implements CardGame, NetworkGame{
 		 *  (please refer to the general behavior of the client described in the previous section).
 
 		 * */
+		
 		//noted that this function is continously running in the thread, receiving the message and parsing the message
 		switch(message.getType()){
 		case CardGameMessage.PLAYER_LIST:
 			// set player id of local user and update the name in the player list
 			this.playerID = message.getPlayerID(); // got an assigned from the server
 			String [] arr  = (String []) message.getData(); // the data package actually contain an array of user names
-			//how do i change the player list ?
+			
 			for( int i = 0 ; i< arr.length ; i++){//is two array having the same order ?
 				this.playerList.get(i).setName(arr[i]);
-			}
-			//update the local player list with the server player list
-			System.out.println("receiving a player list msg");
+			}//update the local player list with the server player list
 			break;
 		case CardGameMessage.JOIN:
 			// set the name and id for the new user
 			this.playerList.get(message.getPlayerID()).setName( (String) message.getData() );
-			System.out.println("got a join msg");
 			break;
 		case CardGameMessage.FULL:
 			this.table.println("server is full cannot join the game");
-			System.out.println("got a full msg");
 			break;
 		case CardGameMessage.QUIT:
 			/*
@@ -356,7 +458,7 @@ public class BigTwoClient implements CardGame, NetworkGame{
 			this.playerList.get(message.getPlayerID()).setName("");//set the the name of the quit player to empty string
 			if(this.isPlaying()){
 				//the game is still goint on 
-				System.out.println("the game should be stop because someone is disconnected");
+				this.table.println("the game should be stop because someone is disconnected");
 				this.sendMessage(new CardGameMessage(CardGameMessage.READY, -1 , null));
 			}else{
 				System.out.println("the game ends and someone is disconnected from the game, so it's ok ~~");
@@ -381,16 +483,25 @@ public class BigTwoClient implements CardGame, NetworkGame{
 			 * */
 			//noted that the data package in this message contains the shuffle deck of cards packed as an object data
 			this.start( (Deck) message.getData());
+			this.table.println("all players ready game starts");
 			break;
 		case CardGameMessage.MOVE:
-			System.out.println("receiving a move message from , id : "+message.getPlayerID());
-			this.checkMove(message.getPlayerID(), (int [])message.getData());
-			this.table.println(message.getPlayerID()+" is making a move ");
-			System.out.println("got a move msg");
+			if(this.isPlaying()){
+				this.checkMove(message.getPlayerID(), (int [])message.getData());
+			}else{
+				this.table.println("\nGame ends");
+				for (CardGamePlayer p : playerList) {
+					//System.out.println(p.getName() + " has " + p.getNumOfCards() + " of cards in hand. ");
+					this.table.println("player "+p.getName() + " has " + p.getNumOfCards() + " of cards in hand. ");
+				}
+			}
+			//this.table.println(message.getPlayerID()+" is making a move ");
+			this.table.repaint();
 			break;
 		case CardGameMessage.MSG:
-			System.out.println("receive a msg ...");
-			this.table.println((String)message.getData());
+			//System.out.println("receive a msg ...");
+			this.table.printMsg("player "+(String)message.getData());
+			this.table.repaint();
 			break;
 		default:
 			this.table.println	("Wrong message type: " + message.getType());
@@ -399,6 +510,11 @@ public class BigTwoClient implements CardGame, NetworkGame{
 			break;
 		}
 	}
+	
+	/**
+	 * a method for sending the message to the server
+	 * @param GameMessage message : the message to be sent
+	 */
 
 	@Override
 	public void sendMessage(GameMessage message) {
@@ -411,15 +527,19 @@ public class BigTwoClient implements CardGame, NetworkGame{
 		
 		try{
 			this.oos.writeObject(message);
-			//this.oos.flush();
+			this.oos.flush();
 		}catch(Exception e){
 			System.out.println("send message fail");
 			e.printStackTrace();
 		}
 		
-		//how to send message ?
 	}
 
+	/**
+	 * a thread created to handle the message received from the server
+	 * @author chengwei
+	 *
+	 */
 	class ServerHandler implements Runnable{
 		
 		/*
@@ -431,7 +551,6 @@ public class BigTwoClient implements CardGame, NetworkGame{
 		 * */
 		
 		private ObjectInputStream objReader;
-		//private Socket serverSocket;
 		
 		public ServerHandler(){
 			try{
