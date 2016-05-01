@@ -1,0 +1,11 @@
+public class Postgraduate extends Student{
+	public Postgraduate(){
+		System.out.println("Postgraduate class no-args constructor called");
+	}
+	
+	public Postgraduate(String name)
+    {	
+    	System.out.println("Postgraduate class Parameterized constructor called by " + name);
+    	super(name);
+    }
+}
